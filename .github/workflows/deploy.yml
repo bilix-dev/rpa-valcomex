@@ -44,7 +44,7 @@ jobs:
             export PATH=/home/bilix/.nvm/versions/node/v20.14.0/bin:$PATH #'which pm2' command on terminal will give the right path
             cd $TARGET_DIR
             git pull origin ${GITHUB_REF#refs/heads/}
-            npm install
+            npm install -f
             npm run build
             if pm2 list | grep -q $APP_NAME; then
               echo "Restarting application: $APP_NAME"
