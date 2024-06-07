@@ -13,13 +13,16 @@ const Fileinput = ({
   badge,
   selectedFiles,
   accept,
+  currentRef,
 }) => {
   return (
     <div>
       <div className="filegroup">
         <label>
           <input
+            ref={currentRef}
             type="file"
+            disabled={selectedFile}
             accept={accept}
             onChange={onChange}
             className="bg-red-400 w-full hidden"

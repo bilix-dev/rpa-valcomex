@@ -10,6 +10,7 @@ import Logo from "./Tools/Logo";
 import Profile from "./Tools/Profile";
 import useRtl from "@/hooks/useRtl";
 import useMobileMenu from "@/hooks/useMobileMenu";
+import SearchModal from "./Tools/SearchModal";
 
 const Header = ({ className = "custom-class" }) => {
   const [collapsed, setMenuCollapsed] = useSidebar();
@@ -87,6 +88,7 @@ const Header = ({ className = "custom-class" }) => {
                   <Icon icon="heroicons-outline:menu-alt-3" />
                 </div>
               )}
+              <SearchModal />
             </div>
           )}
           {/* For Horizontal  */}
@@ -104,6 +106,7 @@ const Header = ({ className = "custom-class" }) => {
               )}
             </div>
           )}
+
           {/*  Horizontal  Main Menu */}
           {/* {menuType === "horizontal" && width >= breakpoints.xl ? (
             <HorizentalMenu />

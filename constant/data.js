@@ -10,8 +10,35 @@ export const menuItems = [
     noAuth: true,
   },
   {
+    title: "Matching",
+    icon: "heroicons:document-duplicate",
+    link: "/matching",
+  },
+  {
+    title: "Inscripciones",
+    icon: "heroicons:truck",
+    link: "/inscriptions",
+  },
+  {
     isHeadr: true,
     title: "sistema",
+  },
+  {
+    title: "Mantenedores",
+    isOpen: true,
+    icon: "heroicons:cog-8-tooth",
+    child: [
+      {
+        childtitle: "Órdenes de Servicio",
+        childlink: "/os",
+        grant: "os",
+      },
+      {
+        childtitle: "Carga Masiva",
+        childlink: "/os/massive",
+        grant: "os",
+      },
+    ],
   },
   {
     title: "Accesos",
@@ -39,6 +66,11 @@ export const menuItems = [
         childtitle: "Operador",
         childlink: "/operator",
         grant: "operator",
+      },
+      {
+        childtitle: "Contactos",
+        childlink: "/contacts",
+        grant: "contacts",
       },
     ],
   },

@@ -18,7 +18,7 @@ import { Icon } from "@iconify/react";
 import LoadingIcon from "@/components/ui/LoadingIcon";
 import { toFormatDateTime } from "@/helpers/helper";
 
-const IndeterminateCheckbox = React.forwardRef(
+export const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
     const defaultRef = React.useRef();
     const resolvedRef = ref || defaultRef;
@@ -117,7 +117,7 @@ const BaseTable = ({
   isValidating,
   ...rest
 }) => {
-  const columnsMemo = useMemo(() => columns ?? [], []);
+  const columnsMemo = useMemo(() => columns ?? [], [columns]);
   const dataMemo = useMemo(() => data ?? [], [data]);
 
   const tableInstance = useTable(
@@ -132,6 +132,7 @@ const BaseTable = ({
       autoResetGlobalFilter: false,
       autoResetFilters: false,
       autoResetSelectedRows: false,
+      autoResetSortBy: false,
       meta,
       initialState,
     },
@@ -141,24 +142,24 @@ const BaseTable = ({
     usePagination,
     useRowSelect,
     (hooks) => {
-      if (setSelectedRows) {
-        hooks.visibleColumns.push((columns) => [
-          {
-            id: "selection",
-            Header: ({ getToggleAllRowsSelectedProps }) => (
-              <div>
-                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-              </div>
-            ),
-            Cell: ({ row }) => (
-              <div>
-                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-              </div>
-            ),
-          },
-          ...columns,
-        ]);
-      }
+      // if (setSelectedRows) {
+      //   hooks.visibleColumns.push((columns) => [
+      //     {
+      //       id: "selection",
+      //       Header: ({ getToggleAllRowsSelectedProps }) => (
+      //         <div>
+      //           <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+      //         </div>
+      //       ),
+      //       Cell: ({ row }) => (
+      //         <div>
+      //           <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+      //         </div>
+      //       ),
+      //     },
+      //     ...columns,
+      //   ]);
+      // }
     }
   );
   const {

@@ -14,7 +14,7 @@ export async function PUT(request, { params }) {
   const data = await request.json();
   const user = await User.update(
     { ...data, image: data.image ? Buffer.from(data.image) : null },
-    { where: { id } }
+    { where: { id }, individualHooks: true }
   );
   return NextResponse.json(user);
 }

@@ -1,19 +1,54 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Dashboard from "@/components/ui/Dashboard/Dashboard";
-import { Tatc, Tstc, User, UserLogin } from "@/database/models";
+import {
+  Container,
+  ContainerMatch,
+  ServiceOrder,
+  User,
+} from "@/database/models";
+import { toFormatContainer, toFormatDateTime } from "@/helpers/helper";
 import { getServerSession } from "next-auth";
-import { Op, Sequelize } from "sequelize";
-
 export const metadata = {
   title: {
     default: "Inicio",
   },
 };
 
-async function StarterPage() {
+async function Page() {
   const { user } = await getServerSession(authOptions);
 
-  return <Dashboard />;
+  const li = await ContainerMatch.findAll({
+    include: [
+      {
+        required: true,
+        model: Container,
+        include: [
+          { model: ServiceOrder, where: { operatorId: user?.operatorId } },
+        ],
+      },
+      {
+        model: User,
+      },
+    ],
+    limit: 5,
+    order: [[`createdAt`, "DESC"]],
+  });
+
+  const p_li = JSON.parse(JSON.stringify(li));
+
+  return (
+    <Dashboard
+      data={{
+        lastInscriptions: p_li.map((x) => [
+          toFormatContainer(x.container.name),
+          x.user.name,
+          x.user.dni,
+          x.plateNumber,
+          toFormatDateTime(x.container.matchDate),
+        ]),
+      }}
+    />
+  );
 }
 
-export default StarterPage;
+export default Page;

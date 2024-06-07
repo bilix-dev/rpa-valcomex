@@ -1,17 +1,34 @@
-import { Operator } from "@/database/models";
+import { Operator, Rpa, connection } from "@/database/models";
 import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
-  const unscoped = request.nextUrl.searchParams.get("unscoped");
   const id = params.operatorId;
-  const model = unscoped ? Operator.unscoped() : Operator;
-  const operator = await model.findByPk(id);
+  const operator = await Operator.findByPk(id);
   return NextResponse.json(operator);
 }
 
 export async function PUT(request, { params }) {
   const id = params.operatorId;
-  const data = await request.json();
-  const operator = await Operator.update(data, { where: { id } });
-  return NextResponse.json(operator);
+  const { rpas, ...data } = await request.json();
+  const t = await connection.transaction();
+  try {
+    const operator = await Operator.update(data, {
+      where: { id },
+      individualHooks: true,
+      transaction: t,
+    });
+
+    for (const rpa of rpas) {
+      await Rpa.update(rpa, {
+        where: { id: rpa.id },
+        individualHooks: true,
+        transaction: t,
+      });
+    }
+    await t.commit();
+    return NextResponse.json(operator);
+  } catch (e) {
+    await t.rollback();
+    return NextResponse.json(e, { status: 500 });
+  }
 }

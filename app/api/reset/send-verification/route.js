@@ -6,12 +6,9 @@ import ResetPasswordMail from "@/emails/ResetPasswordMail";
 import { render } from "@react-email/components";
 
 export async function POST(request) {
-  const { email, operatorCode } = await request.json();
+  const { email } = await request.json();
   var user = await User.findOne({
     where: { email },
-    include: [
-      { model: Operator, required: true, where: { code: operatorCode } },
-    ],
   });
   if (user == null)
     return NextResponse.json({

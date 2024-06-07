@@ -22,7 +22,7 @@ import useAuth from "@/hooks/useAuth";
 import { useSystemData } from "@/context/AuthProvider";
 
 const Profile = () => {
-  const { user: data, operator } = useSystemData();
+  const { user: data } = useSystemData();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const { update } = useAuth();
@@ -31,7 +31,6 @@ const Profile = () => {
     setShowPassword(false);
     await triggerPassword({
       email: data?.email,
-      operatorCode: operator?.code,
     });
     setShowPassword(true);
   };
@@ -48,6 +47,7 @@ const Profile = () => {
   const schema = yup
     .object({
       name: yup.string().required("Nombre requerido"),
+      dni: yup.string().required("DNI requerido"),
     })
     .required();
 
@@ -102,14 +102,6 @@ const Profile = () => {
           <div className="grid md:grid-cols-2 gap-5">
             <div className="grid gap-5">
               <Textinput
-                label="Nombre"
-                type="text"
-                placeholder="Nombre"
-                name={"name"}
-                register={register}
-                error={errors?.name}
-              />
-              <Textinput
                 disabled={true}
                 label="Usuario"
                 type="text"
@@ -124,6 +116,22 @@ const Profile = () => {
                 placeholder="Correo Electrónico"
                 name={"email"}
                 register={register}
+              />
+              <Textinput
+                label="Nombre"
+                type="text"
+                placeholder="Nombre"
+                name={"name"}
+                register={register}
+                error={errors?.name}
+              />
+              <Textinput
+                label="DNI"
+                type="text"
+                placeholder="DNI"
+                name={"dni"}
+                register={register}
+                error={errors?.dni}
               />
             </div>
             <div>

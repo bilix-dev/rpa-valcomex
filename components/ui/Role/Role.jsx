@@ -100,6 +100,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {} }) => {
     register,
     reset,
     setValue,
+    watch,
     control,
     formState: { errors, isSubmitting },
     handleSubmit,
@@ -198,14 +199,24 @@ const CrudModal = ({ OpenButtonComponent, title, data = {} }) => {
             isOpen(false);
           })}
         >
-          <Textinput
-            label="Rol"
-            name="name"
-            type="text"
-            placeholder="Rol"
-            register={register}
-            error={errors?.name}
-          />
+          <div className="grid grid-cols-4 gap-5 items-end">
+            <div className="col-span-3">
+              <Textinput
+                label="Rol"
+                name="name"
+                type="text"
+                placeholder="Rol"
+                register={register}
+                error={errors?.name}
+              />
+            </div>
+            <Checkbox
+              id={`mobile`}
+              register={register(`mobile`)}
+              label={<div className=" ml-2 capitalize">Movil</div>}
+              checked={watch(`mobile`)}
+            />
+          </div>
 
           {isLoading ? (
             <SkeletionTable count={10} />
@@ -310,6 +321,7 @@ const Role = () => {
         Cell: ({ row }) => {
           return (
             <div className="flex space-x-3 rtl:space-x-reverse">
+              <RegistryInfo data={row.original} />
               {!row.original.super && (
                 <>
                   {hasRoleAccess("roles", "edit") && (
@@ -339,7 +351,6 @@ const Role = () => {
                   )}
                 </>
               )}
-              <RegistryInfo data={row.original} />
             </div>
           );
         },
@@ -347,6 +358,30 @@ const Role = () => {
       {
         Header: "Rol",
         accessor: "name",
+      },
+      {
+        Header: "Movil",
+        accessor: (user) => (user.mobile ? "Si" : "No"),
+        Cell: (row) => {
+          return (
+            <span className="block w-full">
+              <span
+                className={` inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 ${
+                  row?.cell?.value === "Si"
+                    ? "text-primary-500 bg-primary-500"
+                    : ""
+                }
+              ${
+                row?.cell?.value === "No"
+                  ? "text-secondary-500 bg-secondary-500"
+                  : ""
+              }`}
+              >
+                {row?.cell?.value}
+              </span>
+            </span>
+          );
+        },
       },
       {
         Header: "Maestro",

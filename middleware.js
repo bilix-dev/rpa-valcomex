@@ -2,6 +2,8 @@ import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 import { GRANTS, dateDiff, hasAccess } from "./helpers/helper";
 import { menuItems } from "./constant/data";
+import { headers } from "next/headers";
+import * as jose from "jose";
 
 export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
@@ -10,7 +12,55 @@ export default withAuth(
     const token = req.nextauth.token;
     const pathname = req.nextUrl.pathname;
 
-    if (pathname.startsWith("/api") || pathname.startsWith("/assets")) {
+    if (pathname.startsWith("/assets")) {
+      return NextResponse.next();
+    }
+
+    if (pathname.startsWith("/api")) {
+      if (!token) {
+        if (
+          !(
+            pathname.startsWith("/api/external") ||
+            pathname.startsWith("/api/auth") ||
+            pathname.startsWith("/api/register") ||
+            pathname.startsWith("/api/reset") ||
+            pathname.startsWith("/api/mobile")
+          )
+        ) {
+          return NextResponse.json(
+            { error: "Usuario no autorizado" },
+            { status: 401 }
+          );
+        }
+      }
+
+      //Si es una api de aplicacion movil (si tiene o no token es lo mismo)
+      if (pathname.startsWith("/api/mobile")) {
+        if (!pathname.startsWith("/api/mobile/auth")) {
+          try {
+            const requestHeaders = new Headers(req.headers);
+            const authorization = requestHeaders.get("authorization");
+            const jwt = authorization.split(" ")[1];
+
+            const { payload } = await jose.jwtVerify(
+              jwt,
+              new TextEncoder().encode(process.env.NEXTAUTH_SECRET)
+            );
+            requestHeaders.delete("authorization");
+            requestHeaders.set("userId", payload.identifier.userId);
+            requestHeaders.set("operatorId", payload.identifier.operatorId);
+            requestHeaders.set("userName", payload.identifier.userName);
+            return NextResponse.next({
+              request: {
+                headers: requestHeaders,
+              },
+            });
+          } catch (e) {
+            return NextResponse.json({ error: e.message }, { status: 401 });
+          }
+        }
+      }
+
       return NextResponse.next();
     }
 
@@ -31,38 +81,6 @@ export default withAuth(
     if (!expiredPassword && pathname.endsWith("/reset-password")) {
       return NextResponse.redirect(`${req.nextUrl.origin}/dashboard`);
     }
-
-    // if (
-    //   token == null &&
-    //   pathname.startsWith("/api") &&
-    //   !pathname.startsWith("/api/auth") &&
-    //   !pathname.startsWith("/api/external") &&
-    //   !pathname.startsWith("/api/register") &&
-    //   !pathname.startsWith("/api/reset")
-    // )
-    //   return NextResponse.json(
-    //     { status: 1, message: "No autorizado" },
-    //     { status: 401 }
-    //   );
-
-    // if (pathname.startsWith("/api/external")) {
-    //   try {
-    //     const external_token = req.headers.get("Authorization").split(" ")[1];
-    //     await jose.jwtVerify(
-    //       external_token,
-    //       new TextEncoder().encode(
-    //         pathname.startsWith("/api/external/login")
-    //           ? process.env.NEXTAUTH_EXTERNAL_SECRET
-    //           : process.env.NEXTAUTH_SECRET
-    //       )
-    //     );
-    //   } catch (e) {
-    //     return NextResponse.json(
-    //       { status: 1, message: "No autorizado" },
-    //       { status: 401 }
-    //     );
-    //   }
-    // }
 
     return NextResponse.next();
   },

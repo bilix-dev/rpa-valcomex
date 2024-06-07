@@ -4,10 +4,6 @@ import { dateDiff } from "@/helpers/helper";
 import { useEffect, useRef, useState } from "react";
 import { useAsyncDebounce } from "react-table";
 import InputGroup from "@/components/ui/InputGroup";
-import StatusSelect from "@/components/ui/Selects/StatusSelect";
-import CustomSelect from "@/components/ui/Selects/CustomSelect";
-import useAuth from "@/hooks/useAuth";
-import DepositSelect from "@/components/ui/Selects/DepositSelect";
 
 export const Filter = ({ column }) => {
   const { setFilter, filterValue, filterOptions = {} } = column;
@@ -94,103 +90,6 @@ export const DateFilter = ({ column }) => {
             setFilter(currentDate.length == 0 ? undefined : currentDate);
           },
         }}
-      />
-    </div>
-  );
-};
-
-export const StatusFilter = ({ column }) => {
-  const { setFilter, filterValue } = column;
-  const [value, setValue] = useState(filterValue);
-  const onChange = useAsyncDebounce(
-    (value) => setFilter(value || undefined),
-    0
-  );
-
-  const ref = useRef(null);
-  useEffect(() => {
-    filterValue == undefined && ref?.current.clearValue();
-  }, [filterValue]);
-
-  return (
-    <div className="flex mt-2 w-max" onClick={(e) => e.stopPropagation()}>
-      <StatusSelect
-        ref={ref}
-        isMulti
-        defaultValue={value}
-        menuPortalTarget={document.body}
-        onChange={(e) => {
-          setValue(e);
-          onChange(e);
-        }}
-        label={false}
-        isClearable={true}
-      />
-    </div>
-  );
-};
-
-export const CustomFilter = ({ column }) => {
-  const { operatorId } = useAuth();
-  const { setFilter, filterValue } = column;
-  const [value, setValue] = useState(filterValue);
-  const onChange = useAsyncDebounce(
-    (value) => setFilter(value || undefined),
-    0
-  );
-
-  const ref = useRef(null);
-  useEffect(() => {
-    filterValue == undefined && ref?.current?.clearValue();
-  }, [filterValue]);
-
-  return (
-    <div className="flex mt-2 w-max" onClick={(e) => e.stopPropagation()}>
-      <CustomSelect
-        ref={ref}
-        operatorId={operatorId}
-        isMulti
-        defaultValue={value}
-        menuPortalTarget={document.body}
-        onChange={(e) => {
-          setValue(e);
-          onChange(e);
-        }}
-        label={false}
-        isClearable={true}
-      />
-    </div>
-  );
-};
-
-export const DepositFilter = ({ column }) => {
-  const { operatorId } = useAuth();
-  const { setFilter, filterValue } = column;
-  const [value, setValue] = useState(filterValue);
-  const onChange = useAsyncDebounce(
-    (value) => setFilter(value || undefined),
-    0
-  );
-
-  const ref = useRef(null);
-  useEffect(() => {
-    filterValue == undefined && ref?.current?.clearValue();
-  }, [filterValue]);
-
-  return (
-    <div className="flex mt-2 w-max" onClick={(e) => e.stopPropagation()}>
-      <DepositSelect
-        ref={ref}
-        operatorId={operatorId}
-        isMulti
-        defaultValue={value}
-        menuPortalTarget={document.body}
-        onChange={(e) => {
-          setValue(e);
-          onChange(e);
-        }}
-        label={false}
-        isClearable={true}
       />
     </div>
   );

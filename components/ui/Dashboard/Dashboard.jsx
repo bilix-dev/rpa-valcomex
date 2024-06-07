@@ -1,51 +1,26 @@
 "use client";
 import { toFormatDateTime } from "@/helpers/helper";
 import React, { useMemo, useState } from "react";
+import CustomTable from "../CustomTable";
+import Card from "../Card";
 
-export const CustomTable = ({ headers, data }) => (
-  <div className="overflow-x-auto ">
-    <div className="inline-block min-w-full align-middle">
-      <div className="overflow-hidden ">
-        <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
-          <thead className="bg-slate-200 dark:bg-slate-700">
-            <tr>
-              {headers?.map((row, i) => (
-                <th key={i} scope="col" className=" table-th ">
-                  {row}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-            {data?.map((row, i) => (
-              <tr key={i} className=" even:bg-slate-200 dark:even:bg-slate-700">
-                {row.map((r, i) => {
-                  let cell = undefined;
-                  if (r instanceof Date) {
-                    cell = toFormatDateTime(r);
-                  } else if (React.isValidElement(r)) {
-                    cell = r;
-                  } else if (r instanceof Date) cell = undefined;
-                  else {
-                    cell = r;
-                  }
-                  return (
-                    <td key={i} className="table-td normal-case">
-                      {cell}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+const Dashboard = ({ data }) => {
+  console.log(data);
+
+  return (
+    <div className="grid gap-5">
+      <div className="grid md:grid-cols-3 grid-cols-1 items-center gap-5 ">
+        <div className="grid md:grid-cols-1 grid-cols-3 gap-5">
+          <Card noborder title={<div className="text-md">Últimos 5 Match</div>}>
+            <CustomTable
+              headers={["Contenedor", "Chofer", "DNI", "Patente", "Match"]}
+              data={data.lastInscriptions}
+            />
+          </Card>
+        </div>
       </div>
     </div>
-  </div>
-);
-
-const Dashboard = () => {
-  return <div className="grid gap-5"></div>;
+  );
 };
 
 export default Dashboard;

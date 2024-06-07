@@ -1,11 +1,11 @@
 import React from "react";
 import { Icon } from "@iconify/react";
-const LoadingIcon = ({ icon, isLoading, ...rest }) => {
+const LoadingIcon = ({ icon, isLoading, className, ...rest }) => {
   return (
     <>
       <Icon
         icon={!isLoading ? icon : "heroicons:arrow-path"}
-        className={isLoading && "animate-spin"}
+        className={`${className} ${isLoading && "animate-spin"}`}
         {...rest}
       />
     </>

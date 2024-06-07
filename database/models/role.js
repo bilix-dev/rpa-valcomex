@@ -12,6 +12,11 @@ const initRole = (sequelize, DataTypes) => {
       },
       name: DataTypes.STRING,
       super: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+      mobile: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
       createdBy: DataTypes.STRING,
       updatedBy: DataTypes.STRING,
     },

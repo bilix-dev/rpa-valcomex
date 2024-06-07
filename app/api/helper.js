@@ -1,10 +1,12 @@
 import Jwt from "jsonwebtoken";
-import { VerificationToken } from "@/database/models";
+import { Container, VerificationToken } from "@/database/models";
 import { sendEmail } from "@/configs/email";
 import { render } from "@react-email/components";
 import RegisterMail from "@/emails/RegisterMail";
 import { Op, Sequelize } from "sequelize";
 import * as ExcelJS from "exceljs";
+import useRemoteAxios from "@/hooks/useRemoteAxios";
+import { CONTAINER_STATUS } from "@/helpers/helper";
 
 export const getOrigin = (origin) =>
   process.env.NODE_ENV == "development"
@@ -162,3 +164,89 @@ export const getDataFromWorksheet = (worksheet) => {
   });
   return { titles, data };
 };
+
+export const paramsOs = (query) => {
+  const pageIndex = parseInt(query.pageIndex);
+  const pageSize = parseInt(query.pageSize);
+
+  const filters =
+    query.filters
+      ?.filter((x) => x.value)
+      .map((x) => {
+        if (x.id == "createdAt") {
+          return {
+            [Op.and]: [
+              Sequelize.where(
+                Sequelize.fn("date", Sequelize.col("serviceOrder.created_at")),
+                ">=",
+                Sequelize.fn("date", x.value[0])
+              ),
+              Sequelize.where(
+                Sequelize.fn("date", Sequelize.col("serviceOrder.created_at")),
+                "<=",
+                Sequelize.fn("date", x.value[1])
+              ),
+            ],
+          };
+        }
+
+        if (x.id == "code")
+          return {
+            $code$: {
+              [Op.like]: "%" + x.value + "%",
+            },
+          };
+
+        return { [x.id]: x.value };
+      }) || [];
+
+  const sortBy = query.sortBy?.map((x) => {
+    return [x.id, x.desc == "true" ? "DESC" : "ASC"];
+  });
+
+  return {
+    pageIndex,
+    pageSize,
+    filters,
+    sortBy,
+  };
+};
+
+export async function sendDataAsync(container) {
+  const fetcher = useRemoteAxios();
+  for (let end of container.containerEndpoints
+    .filter((x) => !x.status)
+    .sort((x, y) => x.order - y.order)) {
+    const result = await fetcher.post("set", {
+      terminal: end.rpa.code,
+      userName: end.rpa.userName,
+      password: end.rpa.password,
+      payload: {
+        id: end.id,
+        container: container.name,
+        booking: "ZIMUSNC805613",
+      },
+    });
+
+    switch (result.data.code) {
+      case 0: {
+        await end.update({ status: true });
+        break;
+      }
+      case 1:
+      case 2:
+      case 3:
+        await end.update({ error: true });
+      case 4:
+        return;
+      default:
+        return;
+    }
+  }
+
+  //Si avanza significa que todos se cumplieron, cambiar estado a contenedor
+  await container.update({
+    status: CONTAINER_STATUS.TRAMITADO,
+    processedDate: new Date(),
+  });
+}

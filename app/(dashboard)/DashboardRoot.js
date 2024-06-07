@@ -34,6 +34,7 @@ import {
   toFormatDate,
 } from "@/helpers/helper";
 import Link from "next/link";
+import { WsProvider } from "@/context/WsProvider";
 
 export default function DashboardRoot({ children }) {
   const { width, breakpoints } = useWidth();
@@ -95,116 +96,120 @@ export default function DashboardRoot({ children }) {
   if (data == undefined) return <Loading />;
 
   return (
-    <div
-      dir={isRtl ? "rtl" : "ltr"}
-      className={`app-warp    ${isDark ? "dark" : "light"} ${
-        skin === "bordered" ? "skin--bordered" : "skin--default"
-      }
+    <WsProvider>
+      <div
+        dir={isRtl ? "rtl" : "ltr"}
+        className={`app-warp    ${isDark ? "dark" : "light"} ${
+          skin === "bordered" ? "skin--bordered" : "skin--default"
+        }
       ${navbarType === "floating" ? "has-floating" : ""}
       `}
-    >
-      <Header className={width > breakpoints.xl ? switchHeaderClass() : ""} />
-      {menuType === "vertical" && width > breakpoints.xl && !menuHidden && (
-        <Sidebar />
-      )}
-      <MobileMenu
-        className={`${
-          width < breakpoints.xl && mobileMenu
-            ? "left-0 visible opacity-100  z-[9999]"
-            : "left-[-300px] invisible opacity-0  z-[-999] "
-        }`}
-      />
-      {/* mobile menu overlay*/}
-      {width < breakpoints.xl && mobileMenu && (
-        <div
-          className="overlay bg-slate-900/50 backdrop-filter backdrop-blur-sm opacity-100 fixed inset-0 z-[999]"
-          onClick={() => setMobileMenu(false)}
-        ></div>
-      )}
-      <Settings />
-      <div
-        className={`content-wrapper transition-all duration-150 ${
-          width > 1280 ? switchHeaderClass() : ""
-        }`}
       >
-        {/* md:min-h-screen will h-full*/}
-        <div className="page-content   page-min-height  ">
+        <Header className={width > breakpoints.xl ? switchHeaderClass() : ""} />
+        {menuType === "vertical" && width > breakpoints.xl && !menuHidden && (
+          <Sidebar />
+        )}
+        <MobileMenu
+          className={`${
+            width < breakpoints.xl && mobileMenu
+              ? "left-0 visible opacity-100  z-[9999]"
+              : "left-[-300px] invisible opacity-0  z-[-999] "
+          }`}
+        />
+        {/* mobile menu overlay*/}
+        {width < breakpoints.xl && mobileMenu && (
           <div
-            className={
-              contentWidth === "boxed" ? "container mx-auto" : "container-fluid"
-            }
-          >
-            <motion.div
-              key={location}
-              initial="pageInitial"
-              animate="pageAnimate"
-              exit="pageExit"
-              variants={{
-                pageInitial: {
-                  opacity: 0,
-                  y: 50,
-                },
-                pageAnimate: {
-                  opacity: 1,
-                  y: 0,
-                },
-                pageExit: {
-                  opacity: 0,
-                  y: -50,
-                },
-              }}
-              transition={{
-                type: "tween",
-                ease: "easeInOut",
-                duration: 0.5,
-              }}
+            className="overlay bg-slate-900/50 backdrop-filter backdrop-blur-sm opacity-100 fixed inset-0 z-[999]"
+            onClick={() => setMobileMenu(false)}
+          ></div>
+        )}
+        <Settings />
+        <div
+          className={`content-wrapper transition-all duration-150 ${
+            width > 1280 ? switchHeaderClass() : ""
+          }`}
+        >
+          {/* md:min-h-screen will h-full*/}
+          <div className="page-content   page-min-height  ">
+            <div
+              className={
+                contentWidth === "boxed"
+                  ? "container mx-auto"
+                  : "container-fluid"
+              }
             >
-              <Suspense fallback={<Loading />}>
-                {show && (
-                  <Alert
-                    toggle={() => setShow(!show)}
-                    icon="akar-icons:triangle-alert"
-                    className="light-mode alert-warning mb-5"
-                  >
-                    {`La subscripción expira el día ${toFormatDate(
-                      operator.expiration
-                    )}. ${dayMessage(dayDiff)}`}
-                  </Alert>
-                )}
-                {passwordShow && (
-                  <Alert
-                    toggle={() => setPasswordShow(!passwordShow)}
-                    icon="akar-icons:triangle-alert"
-                    className="light-mode alert-warning mb-5"
-                  >
-                    {`La contraseña expira el día ${toFormatDate(
-                      user.expiration
-                    )}. Puede cambiar la contraseña desde el `}
-
-                    <Link
-                      href="/profile"
-                      className="font-bold italic underline"
+              <motion.div
+                key={location}
+                initial="pageInitial"
+                animate="pageAnimate"
+                exit="pageExit"
+                variants={{
+                  pageInitial: {
+                    opacity: 0,
+                    y: 50,
+                  },
+                  pageAnimate: {
+                    opacity: 1,
+                    y: 0,
+                  },
+                  pageExit: {
+                    opacity: 0,
+                    y: -50,
+                  },
+                }}
+                transition={{
+                  type: "tween",
+                  ease: "easeInOut",
+                  duration: 0.5,
+                }}
+              >
+                <Suspense fallback={<Loading />}>
+                  {show && (
+                    <Alert
+                      toggle={() => setShow(!show)}
+                      icon="akar-icons:triangle-alert"
+                      className="light-mode alert-warning mb-5"
                     >
-                      perfil
-                    </Link>
-                    {` de usuario. ${passwordMessage(passwordDiff)}`}
-                  </Alert>
-                )}
+                      {`La subscripción expira el día ${toFormatDate(
+                        operator.expiration
+                      )}. ${dayMessage(dayDiff)}`}
+                    </Alert>
+                  )}
+                  {passwordShow && (
+                    <Alert
+                      toggle={() => setPasswordShow(!passwordShow)}
+                      icon="akar-icons:triangle-alert"
+                      className="light-mode alert-warning mb-5"
+                    >
+                      {`La contraseña expira el día ${toFormatDate(
+                        user.expiration
+                      )}. Puede cambiar la contraseña desde el `}
 
-                <Breadcrumbs />
-                {children}
-              </Suspense>
-            </motion.div>
+                      <Link
+                        href="/profile"
+                        className="font-bold italic underline"
+                      >
+                        perfil
+                      </Link>
+                      {` de usuario. ${passwordMessage(passwordDiff)}`}
+                    </Alert>
+                  )}
+
+                  <Breadcrumbs />
+                  {children}
+                </Suspense>
+              </motion.div>
+            </div>
           </div>
         </div>
-      </div>
-      {/* {width < breakpoints.md && <MobileFooter />} */}
-      {/* {width > breakpoints.md && (
+        {/* {width < breakpoints.md && <MobileFooter />} */}
+        {/* {width > breakpoints.md && (
           <Footer
             className={width > breakpoints.xl ? switchHeaderClass() : ""}
           />
         )} */}
-      <Footer className={width > breakpoints.xl ? switchHeaderClass() : ""} />
-    </div>
+        <Footer className={width > breakpoints.xl ? switchHeaderClass() : ""} />
+      </div>
+    </WsProvider>
   );
 }

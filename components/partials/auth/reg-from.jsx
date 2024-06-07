@@ -28,12 +28,16 @@ const RegForm = ({ token, identifier, data }) => {
         .string()
         .required("Usuario es requerido")
         .noWhiteSpaces("Usuario no debe tener espacios en blanco")
-        .test("userName.validation", "Usuario está ocupado", async (code) => {
-          const response = await getDefaultData(
-            `/users/verification/name?operatorId=${data.operatorId}&userName=${code}`
-          )();
-          return !response.data;
-        }),
+        .test(
+          "username-validation",
+          "Usuario ya existe en el sistema",
+          async (search) => {
+            const response = await getDefaultData(
+              `helper/users/${data.id}?search=${search}`
+            )();
+            return response.data;
+          }
+        ),
       password: yup
         .string()
         .min(6, "La contraseña debe tener al menos 6 caracteres")

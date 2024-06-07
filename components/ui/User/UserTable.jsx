@@ -22,8 +22,14 @@ import useSWRDelete from "@/hooks/useSWRDelete";
 import useSWRPut from "@/hooks/useSWRPut";
 import LoadingIcon from "../LoadingIcon";
 import Image from "next/image";
-import { bufferToFile, toFormatDateTime } from "@/helpers/helper";
+import {
+  bufferToFile,
+  getDefaultData,
+  toFormatDateTime,
+} from "@/helpers/helper";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import useAxios from "@/hooks/useAxios";
 
 const Avatar = ({
   name,
@@ -104,6 +110,19 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
 
   const schema = yup
     .object({
+      userName: yup
+        .string()
+        .required("Usuario requerido")
+        .test(
+          "username-validation",
+          "Usuario ya existe en el sistema",
+          async (search) => {
+            const response = await getDefaultData(
+              `helper/users/${data.id}?search=${search}`
+            )();
+            return response.data;
+          }
+        ),
       email: yup.string().email("Correo inválido").required("Correo requerido"),
       name: yup.string().required("Nombre requerido"),
       roleId: yup.string().required("Rol requerido"),
@@ -111,7 +130,7 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
     .required();
 
   const { trigger } = useSWRPut(`/users/${data.id}`);
-
+  const router = useRouter();
   const {
     register,
     reset,
@@ -153,18 +172,19 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
           onSubmit={handleSubmit(async (form) => {
             await trigger({ ...form, operatorId });
             await mutate();
+            router.refresh();
             isOpen(false);
           })}
         >
           <div className="flex items-center gap-5">
             <div className="flex-1">
               <Textinput
-                label="Nombre"
-                name="name"
+                label="Usuario"
+                name="userName"
                 type="text"
-                placeholder="Nombre"
+                placeholder="Usuario"
                 register={register}
-                error={errors?.name}
+                error={errors?.userName}
               />
             </div>
             <Avatar
@@ -174,7 +194,16 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
           </div>
 
           <Textinput
-            disabled={data.id != null}
+            label="Nombre"
+            name="name"
+            type="text"
+            placeholder="Nombre"
+            register={register}
+            error={errors?.name}
+          />
+
+          <Textinput
+            disabled
             name="email"
             label="Correo electrónico"
             placeholder="Correo electrónico"
@@ -211,10 +240,9 @@ const UserTable = ({ mutate, ...rest }) => {
         accessor: "action",
         disableSortBy: true,
         Cell: ({ row }) => {
-          if (row.original.role.super || userId == row.original.id)
-            return <RegistryInfo data={row.original} />;
           return (
             <div className="flex space-x-3 rtl:space-x-reverse">
+              <RegistryInfo data={row.original} />
               {hasRoleAccess("users", "edit") && (
                 <>
                   <CrudModal
@@ -238,13 +266,15 @@ const UserTable = ({ mutate, ...rest }) => {
                       </Tooltip>
                     )}
                   />
-                  <StatusModal data={row.original} mutate={mutate} />
+                  {!(row.original.role.super || userId == row.original.id) ?? (
+                    <StatusModal data={row.original} mutate={mutate} />
+                  )}
                 </>
               )}
-              {hasRoleAccess("users", "delete") && (
-                <DeleteModal data={row.original} mutate={mutate} />
-              )}
-              <RegistryInfo data={row.original} />
+              {hasRoleAccess("users", "delete") &&
+                !(row.original.role.super || userId == row.original.id) && (
+                  <DeleteModal data={row.original} mutate={mutate} />
+                )}
             </div>
           );
         },

@@ -37,8 +37,8 @@ const ForgotPassPage = () => {
                 </div>
               </div>
               <div className="font-normal text-base text-slate-500 dark:text-slate-400 text-center px-2 bg-slate-100 dark:bg-slate-600 rounded py-3 mb-4 mt-10">
-                Ingrese su correo electrónico y operador, y se le enviarán las
-                instrucciones para cambiar la contraseña.
+                Ingrese su correo electrónico y se le enviarán las instrucciones
+                para cambiar la contraseña.
               </div>
 
               <ForgotPass />

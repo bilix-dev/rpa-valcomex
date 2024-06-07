@@ -1,11 +1,8 @@
 import {
-  CntTypes,
   Container,
-  Custom,
-  Deposit,
-  Tatc,
-  TransCompany,
-  Tstc,
+  ContainerEndpoint,
+  Rpa,
+  ServiceOrder,
 } from "@/database/models";
 import { NextResponse } from "next/server";
 import qs from "qs";
@@ -17,60 +14,20 @@ export async function GET(request, { params }) {
   const search = query.search;
   const pageSize = parseInt(query.pageSize);
 
-  const tatc = await Tatc.findAll({
+  const containers = await Container.findAll({
     include: [
-      { model: Container, where: { operatorId } },
-      { model: Custom },
-      { model: CntTypes },
-      { model: TransCompany },
-      { model: Deposit },
-      { association: "cancelCustom" },
-      { association: "transferOriginDeposit" },
-      { association: "transferDestinyDeposit" },
+      { model: ServiceOrder, where: { operatorId }, required: true },
+      { model: ContainerEndpoint, include: [{ model: Rpa }] },
     ],
     where: {
       [Op.or]: {
-        tatc: { [Op.like]: "%" + search + "%" },
-        "$container.name$": { [Op.like]: "%" + search + "%" },
+        name: { [Op.like]: "%" + search + "%" },
+        "$serviceOrder.code$": { [Op.like]: "%" + search + "%" },
       },
     },
     order: [["created_at", "DESC"]],
     limit: pageSize,
   });
 
-  const tstc = await Tstc.findAll({
-    include: [
-      { model: Container, where: { operatorId } },
-      { model: Custom },
-      { model: CntTypes },
-      { model: TransCompany },
-      { association: "cancelCustom" },
-    ],
-    where: {
-      [Op.or]: {
-        tstc: { [Op.like]: "%" + search + "%" },
-        "$container.name$": { [Op.like]: "%" + search + "%" },
-      },
-    },
-    order: [["tstc_issue_date", "DESC"]],
-    limit: pageSize,
-  });
-
-  const tatcResult = tatc.map((x) => ({
-    id: x.id,
-    document: x.tatc,
-    container: x.container.name,
-    type: "T.A.T.C",
-    data: x,
-  }));
-
-  const tstcResult = tstc.map((x) => ({
-    id: x.id,
-    document: x.tstc,
-    container: x.container.name,
-    type: "T.S.T.C",
-    data: x,
-  }));
-
-  return NextResponse.json([...tatcResult, ...tstcResult]);
+  return NextResponse.json(containers);
 }

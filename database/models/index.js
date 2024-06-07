@@ -5,6 +5,13 @@ import Operator from "./operator";
 import Role from "./role";
 import Grant from "./grant";
 import UserLogin from "./user-login";
+import Rpa from "./rpa";
+import ServiceOrder from "./service-order";
+import Container from "./container";
+import ContainerEndpoint from "./container-endpoint";
+import ContainerMatch from "./container-match";
+import Contact from "./contact";
+
 import { v4 as uuidv4 } from "uuid";
 import UserCreationToken from "./user-creation-token";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
@@ -24,6 +31,9 @@ var User = connection.define(
     },
     expiration: {
       type: DataTypes.DATE,
+    },
+    dni: {
+      type: DataTypes.STRING,
     },
     status: {
       type: DataTypes.BOOLEAN,
@@ -50,7 +60,7 @@ var User = connection.define(
     indexes: [
       {
         unique: true,
-        fields: ["user_name", "operator_id"],
+        fields: ["user_name"],
       },
     ],
   }
@@ -101,11 +111,35 @@ connection.addHook("beforeUpdate", async (e) => {
   }
 });
 
+User.beforeBulkCreate((users, options) => {
+  for (const user of users) {
+    if (user.isMember) {
+      user.memberSince = new Date();
+    }
+  }
+
+  // Add `memberSince` to updateOnDuplicate otherwise it won't be persisted
+  if (
+    options.updateOnDuplicate &&
+    !options.updateOnDuplicate.includes("memberSince")
+  ) {
+    options.updateOnDuplicate.push("memberSince");
+  }
+});
+
 //IDs
 connection.models.user.beforeCreate((user) => (user.id = uuidv4()));
 Role.beforeCreate((role) => (role.id = uuidv4()));
 Grant.beforeCreate((grant) => (grant.id = uuidv4()));
 UserLogin.beforeCreate((userLogin) => (userLogin.id = uuidv4()));
+Rpa.beforeCreate((rpa) => (rpa.id = uuidv4()));
+ServiceOrder.beforeCreate((serviceOrder) => (serviceOrder.id = uuidv4()));
+Container.beforeCreate((container) => (container.id = uuidv4()));
+ContainerEndpoint.beforeCreate(
+  (containerEndpoint) => (containerEndpoint.id = uuidv4())
+);
+ContainerMatch.beforeCreate((containerMatch) => (containerMatch.id = uuidv4()));
+Contact.beforeCreate((contacts) => (contacts.id = uuidv4()));
 
 //Asociaciones
 Operator.hasMany(Role, {
@@ -163,8 +197,78 @@ Role.hasMany(UserCreationToken, {
 UserCreationToken.belongsTo(Role);
 //
 
+////////////////////////
+//
+Operator.hasMany(Rpa, {
+  foreignKey: { allowNull: false },
+  onDelete: "RESTRICT",
+});
+Rpa.belongsTo(Operator);
+//
+//
+
+//
+Operator.hasMany(Contact, {
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+Contact.belongsTo(Operator);
+//
+//
+
+Operator.hasMany(ServiceOrder, {
+  foreignKey: { allowNull: false },
+  onDelete: "RESTRICT",
+});
+ServiceOrder.belongsTo(Operator);
+//
+//
+ServiceOrder.hasMany(Container, {
+  foreignKey: { allowNull: false },
+  onDelete: "RESTRICT",
+});
+Container.belongsTo(ServiceOrder);
+//
+
+//
+Container.hasMany(ContainerEndpoint, {
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+
+ContainerEndpoint.belongsTo(Container);
+//
+
+//
+Rpa.hasMany(ContainerEndpoint, {
+  foreignKey: { allowNull: false },
+  onDelete: "RESTRICT",
+});
+
+ContainerEndpoint.belongsTo(Rpa);
+//
+
+//
+Container.hasOne(ContainerMatch, {
+  foreignKey: { allowNull: false, unique: true },
+  onDelete: "RESTRICT",
+});
+
+ContainerMatch.belongsTo(Container);
+//
+
+//
+User.hasMany(ContainerMatch, {
+  foreignKey: { allowNull: false },
+  onDelete: "RESTRICT",
+});
+
+ContainerMatch.belongsTo(User);
+
+//
+
 if (process.env.NODE_ENV == "development") {
-  connection.sync({ alter: true });
+  // connection.sync({ alter: true });
 }
 
 export {
@@ -174,6 +278,12 @@ export {
   Grant,
   RoleGrant,
   Operator,
+  Rpa,
+  ServiceOrder,
+  Contact,
+  Container,
+  ContainerEndpoint,
+  ContainerMatch,
   VerificationToken,
   UserCreationToken,
   connection,

@@ -177,13 +177,13 @@ const UserCreationTable = ({ mutate, ...rest }) => {
           let notValid = Boolean(row.original.inUse);
           return (
             <div className="flex space-x-3 rtl:space-x-reverse">
+              <RegistryInfo data={row.original} />
               {!notValid && hasRoleAccess("users", "edit") && (
                 <RefreshModal data={row.original} mutate={mutate} />
               )}
               {hasRoleAccess("users", "delete") && (
                 <DeleteModal data={row.original} mutate={mutate} />
               )}
-              <RegistryInfo data={row.original} />
             </div>
           );
         },

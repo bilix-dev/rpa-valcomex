@@ -14,6 +14,46 @@ export const GRANTS = Object.freeze({
   delete: "delete",
 });
 
+export const WS_STATUS = Object.freeze({
+  disconnected: "disconnected",
+  connected: "connected",
+  error: "error",
+});
+
+export const OS_STATUS = Object.freeze({
+  VACIO: "vacía",
+  CERRADA: "cerrada",
+  ABIERTA: "abierta",
+});
+
+export const CONTAINER_STATUS = Object.freeze({
+  PENDIENTE: "pendiente",
+  MATCH: "match",
+  PROCESANDO: "procesando",
+  TRAMITADO: "tramitado",
+  FINALIZADO: "finalizado",
+  ANULADO: "anulado",
+  ESPERA: "espera",
+  ERROR: "error",
+});
+
+export const ENDPOINTS = Object.freeze({
+  pc: "Puerto Central (San Antonio)",
+  sti: "STI (San Antonio)",
+  silogport: "Silogport (Valparaíso)",
+  tps: "TPS (San Antonio)",
+  silogport_tps: "Silogport -> TPS (Valparaíso)",
+});
+
+export const SIZE = Object.freeze({
+  20: 20,
+  40: 40,
+});
+
+export const ENDPOINTS_KEYS = Object.keys(ENDPOINTS)
+  .map((x) => ({ [x]: x }))
+  .reduce((x, y) => ({ ...x, ...y }), {});
+
 export const hasAccess = (role) => (code, type) => {
   if (role?.super) return true;
   return role?.grants?.find((x) => x.code == code)?.role_grant[type] ?? false;

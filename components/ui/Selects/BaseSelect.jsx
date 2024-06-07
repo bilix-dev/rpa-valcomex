@@ -55,8 +55,8 @@ const BaseSelect = React.forwardRef(
           isMulti={isMulti}
           isLoading={isLoading}
           loadingMessage={() => "Cargando..."}
-          noOptionsMessage={({ input }) =>
-            !input ? "Sin opciones" : "No hay resultados"
+          noOptionsMessage={({ inputValue }) =>
+            !inputValue ? "Sin opciones" : "No hay resultados"
           }
           {...rest}
         />

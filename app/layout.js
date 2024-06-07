@@ -2,8 +2,8 @@ import Root from "./Root";
 
 export const metadata = {
   title: {
-    default: "TatcPro",
-    template: "TatcPro - %s",
+    default: "RPA Valcomex",
+    template: "RPA Valcomex - %s",
   },
   description: "Por Bilix",
 };

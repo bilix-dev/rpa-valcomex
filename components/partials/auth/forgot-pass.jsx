@@ -9,7 +9,6 @@ import Button from "@/components/ui/Button";
 
 const schema = yup
   .object({
-    operatorCode: yup.string().required("Operador requerido"),
     email: yup
       .string()
       .email("Correo invalida")
@@ -37,15 +36,6 @@ const ForgotPass = () => {
   return (
     <>
       <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
-        <Textinput
-          name="operatorCode"
-          label="Operador"
-          placeholder="Operador"
-          type="text"
-          register={register}
-          error={errors?.operatorCode}
-        />
-
         <Textinput
           name="email"
           label="Correo Electrónico"
