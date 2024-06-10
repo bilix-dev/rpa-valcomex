@@ -122,9 +122,13 @@ const CrudModal = ({ OpenButtonComponent, title, data = {} }) => {
 
         setCheckedList((state) => [
           ...state,
-          { type: "view", id: `view.${id}`, checked: aux?.view ?? false },
-          { type: "edit", id: `edit.${id}`, checked: aux?.edit ?? false },
-          { type: "delete", id: `delete.${id}`, checked: aux?.delete ?? false },
+          { type: GRANTS.view, id: `view.${id}`, checked: aux?.view ?? false },
+          { type: GRANTS.edit, id: `edit.${id}`, checked: aux?.edit ?? false },
+          {
+            type: GRANTS.delete,
+            id: `delete.${id}`,
+            checked: aux?.delete ?? false,
+          },
         ]);
 
         append(

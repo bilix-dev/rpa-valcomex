@@ -1,4 +1,5 @@
 import useAxios from "@/hooks/useAxios";
+import containerValidator from "container-validator";
 import dayjs from "dayjs";
 // import duration from "dayjs/plugin/duration";
 import es from "dayjs/locale/es";
@@ -249,3 +250,45 @@ export const passwordMessage = (n) => {
 
 export const addDays = (date, days) =>
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+
+export const EXCEL_DICTIONARY = {
+  CONTENEDOR: {
+    key: "name",
+    type: "CNT",
+    value: "Texto",
+    required: true,
+    test: (value) => {
+      let validator = new containerValidator();
+      if (value == undefined) return false;
+      return validator.isValid(value.replace("-", ""));
+    },
+  },
+  TAMAÑO: {
+    key: "size",
+    value: "Texto (20 o 40)",
+    type: "CNT",
+    required: true,
+    test: (value) => true,
+  },
+  DESTINO: {
+    key: "endpoint",
+    value: "Texto (sti, pc, silogport_tps)",
+    type: "CNT",
+    required: true,
+    test: (value) => true,
+  },
+  OS: {
+    key: "code",
+    value: "Texto",
+    type: "OS",
+    required: true,
+    test: (value) => true,
+  },
+  BOOKING: {
+    key: "booking",
+    value: "Texto",
+    type: "OS",
+    required: true,
+    test: (value) => true,
+  },
+};

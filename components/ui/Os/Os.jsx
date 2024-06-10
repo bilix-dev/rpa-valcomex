@@ -114,7 +114,7 @@ export const Os = () => {
     filters: [],
   });
 
-  const { operatorId } = useAuth();
+  const { operatorId, hasRoleAccess } = useAuth();
 
   const {
     data: response,
@@ -143,28 +143,32 @@ export const Os = () => {
           return (
             <div className="flex space-x-3 rtl:space-x-reverse">
               <RegistryInfo data={row.original} />
-              <CrudModal
-                title="Editar"
-                data={row.original}
-                mutation={mutate}
-                OpenButtonComponent={({ onClick }) => (
-                  <Tooltip
-                    content="Editar"
-                    placement="top"
-                    arrow
-                    animation="fade"
-                  >
-                    <button
-                      className="action-btn btn-warning"
-                      type="submit"
-                      onClick={onClick}
+              {hasRoleAccess("os", "edit") && (
+                <CrudModal
+                  title="Editar"
+                  data={row.original}
+                  mutation={mutate}
+                  OpenButtonComponent={({ onClick }) => (
+                    <Tooltip
+                      content="Editar"
+                      placement="top"
+                      arrow
+                      animation="fade"
                     >
-                      <Icon icon="heroicons:pencil-square" />
-                    </button>
-                  </Tooltip>
-                )}
-              />
-              <DeleteModal url={`/os/${row.original.id}`} mutation={mutate} />
+                      <button
+                        className="action-btn btn-warning"
+                        type="submit"
+                        onClick={onClick}
+                      >
+                        <Icon icon="heroicons:pencil-square" />
+                      </button>
+                    </Tooltip>
+                  )}
+                />
+              )}
+              {hasRoleAccess("os", "delete") && (
+                <DeleteModal url={`/os/${row.original.id}`} mutation={mutate} />
+              )}
             </div>
           );
         },
@@ -223,30 +227,13 @@ export const Os = () => {
   const actionMenu = useMemo(
     () => (
       <div className="flex flex-row gap-3">
-        {/* <ExcelModal
-          title={"Información Adicional"}
-          OpenButtonComponent={({ onClick }) => (
-            <Tooltip
-              content="Información Adicional"
-              placement="top"
-              arrow
-              animation="fade"
-            >
-              <div>
-                <Button
-                  icon={"heroicons:question-mark-circle"}
-                  className={"btn-dark btn-sm  rounded-[999px]"}
-                  onClick={onClick}
-                />
-              </div>
-            </Tooltip>
-          )}
-        /> */}
-        <CrudModal
-          title={"Crear"}
-          OpenButtonComponent={NewButton}
-          mutation={mutate}
-        />
+        {hasRoleAccess("os", "edit") && (
+          <CrudModal
+            title={"Crear"}
+            OpenButtonComponent={NewButton}
+            mutation={mutate}
+          />
+        )}
       </div>
     ),
     [params]

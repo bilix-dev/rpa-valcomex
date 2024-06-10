@@ -16,46 +16,8 @@ import {
 import { NextResponse } from "next/server";
 import * as ExcelJS from "exceljs";
 import { getDataFromWorksheet } from "@/app/api/helper";
-import { ENDPOINTS_KEYS } from "@/helpers/helper";
+import { ENDPOINTS_KEYS, EXCEL_DICTIONARY } from "@/helpers/helper";
 import { Op } from "sequelize";
-import containerValidator from "container-validator";
-
-const dictionary = {
-  CONTENEDOR: {
-    key: "name",
-    type: "CNT",
-    required: true,
-    test: (value) => {
-      let validator = new containerValidator();
-      if (value == undefined) return false;
-      return validator.isValid(value.replace("-", ""));
-    },
-  },
-  TAMAÑO: {
-    key: "size",
-    type: "CNT",
-    required: true,
-    test: (value) => true,
-  },
-  DESTINO: {
-    key: "endpoint",
-    type: "CNT",
-    required: true,
-    test: (value) => true,
-  },
-  OS: {
-    key: "code",
-    type: "OS",
-    required: true,
-    test: (value) => true,
-  },
-  BOOKING: {
-    key: "booking",
-    type: "OS",
-    required: true,
-    test: (value) => true,
-  },
-};
 
 export async function POST(request) {
   const t = await connection.transaction();
@@ -74,7 +36,7 @@ export async function POST(request) {
       let os_aux = {};
       //Mapeo de inputs
       row: for (const [k, v] of Object.entries(row)) {
-        const aux = dictionary[k];
+        const aux = EXCEL_DICTIONARY[k];
         if (aux == null) continue;
         const { key, type, required, test } = aux;
 

@@ -47,7 +47,7 @@ const StatusModal = ({ data, mutation }) => {
 };
 
 const InscriptionTable = ({ data, mutation, isValidating }) => {
-  const { operatorId } = useAuth();
+  const { operatorId, hasRoleAccess } = useAuth();
   const { mutate: mutateSelect } = useSWRConfig();
 
   const [filter, setFilter] = useState([
@@ -72,21 +72,23 @@ const InscriptionTable = ({ data, mutation, isValidating }) => {
           return (
             <div className="flex space-x-3 rtl:space-x-reverse">
               <RegistryInfo data={row.original} />
-              {row.original.status == CONTAINER_STATUS.TRAMITADO && (
-                <StatusModal data={row.original} mutation={mutation} />
-              )}
+              {row.original.status == CONTAINER_STATUS.TRAMITADO &&
+                hasRoleAccess("inscription", "edit") && (
+                  <StatusModal data={row.original} mutation={mutation} />
+                )}
 
-              {row.original.status == CONTAINER_STATUS.MATCH && (
-                <DeleteModal
-                  url={`/inscriptions/container/${row.original.id}`}
-                  mutation={async () => {
-                    await mutation();
-                    await mutateSelect([
-                      `containers/select/operator/${operatorId}`,
-                    ]);
-                  }}
-                />
-              )}
+              {row.original.status == CONTAINER_STATUS.MATCH &&
+                hasRoleAccess("inscription", "delete") && (
+                  <DeleteModal
+                    url={`/inscriptions/container/${row.original.id}`}
+                    mutation={async () => {
+                      await mutation();
+                      await mutateSelect([
+                        `containers/select/operator/${operatorId}`,
+                      ]);
+                    }}
+                  />
+                )}
             </div>
           );
         },
@@ -196,7 +198,7 @@ const InscriptionTable = ({ data, mutation, isValidating }) => {
 };
 
 const Inscription = () => {
-  const { userId, operatorId } = useAuth();
+  const { userId, operatorId, hasRoleAccess } = useAuth();
   const [values, setValues] = useState([]);
   const ref = useRef(null);
 
@@ -293,6 +295,7 @@ const Inscription = () => {
                   operatorId={operatorId}
                   defaultValue={value}
                   onChange={onChange}
+                  isDisabled={!hasRoleAccess("inscription", "edit")}
                   isClearable
                   error={errors.containerId}
                 />

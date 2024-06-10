@@ -13,18 +13,20 @@ export const menuItems = [
     title: "Matching",
     icon: "heroicons:document-duplicate",
     link: "/matching",
+    grant: "matching",
   },
   {
     title: "Inscripciones",
     icon: "heroicons:truck",
     link: "/inscriptions",
+    grant: "inscriptions",
   },
   {
     isHeadr: true,
     title: "sistema",
   },
   {
-    title: "Mantenedores",
+    title: "Documentos",
     isOpen: true,
     icon: "heroicons:cog-8-tooth",
     child: [
@@ -36,7 +38,7 @@ export const menuItems = [
       {
         childtitle: "Carga Masiva",
         childlink: "/os/massive",
-        grant: "os",
+        grant: "os/massive",
       },
     ],
   },

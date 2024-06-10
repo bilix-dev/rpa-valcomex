@@ -4,6 +4,7 @@ import Link from "next/link";
 import Icon from "@/components/ui/Icon";
 import Multilevel from "./Multi";
 import useAuth from "@/hooks/useAuth";
+import { GRANTS } from "@/helpers/helper";
 
 const Submenu = ({ activeSubmenu, item, i, locationName }) => {
   const { hasRoleAccess } = useAuth();
@@ -19,7 +20,7 @@ const Submenu = ({ activeSubmenu, item, i, locationName }) => {
     <Collapse isOpened={activeSubmenu === i}>
       <ul className="sub-menu  space-y-4  ">
         {item.child
-          ?.filter((child) => hasRoleAccess(child.grant, "view"))
+          ?.filter((child) => hasRoleAccess(child.grant, GRANTS.view))
           .map((subItem, j) => (
             <li key={j} className="block pl-4 pr-1 first:pt-4  last:pb-4">
               {subItem?.multi_menu ? (

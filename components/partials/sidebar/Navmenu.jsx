@@ -65,7 +65,7 @@ const Navmenu = ({ menus }) => {
             {/* single menu with no childred*/}
             {!item.child &&
               !item.isHeadr &&
-              (item.noAuth || hasRoleAccess(item.grant, "view")) && (
+              (item.noAuth || hasRoleAccess(item.grant, GRANTS.view)) && (
                 <Link className="menu-link" href={item.link}>
                   <span className="menu-icon flex-grow-0">
                     <Icon icon={item.icon} />

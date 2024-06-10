@@ -22,6 +22,7 @@ import { FilterBadge } from "@/components/partials/table/FilterBadge";
 
 const PendingTable = ({ data, mutation, isValidating }) => {
   const [selectedRows, setSelectedRows] = useState([]);
+  const { hasRoleAccess } = useAuth();
   // const filteredSelectedRows = useMemo(
   //   () => selectedRows.filter((x) => x.status != CONTAINER_STATUS.PENDIENTE),
   //   [selectedRows]
@@ -50,6 +51,7 @@ const PendingTable = ({ data, mutation, isValidating }) => {
     () => [
       {
         id: "selection",
+        accessor: "selection",
         // Header: ({ getToggleAllRowsSelectedProps }) => (
         //   <div>
         //     {console.log(getToggleAllRowsSelectedProps())}
@@ -125,7 +127,7 @@ const PendingTable = ({ data, mutation, isValidating }) => {
   const actionMenu = useMemo(
     () => (
       <div>
-        {selectedRows.length > 0 && (
+        {selectedRows.length > 0 && hasRoleAccess("matching", "edit") && (
           <Tooltip content={"Procesar"} placement="top" arrow animation="fade">
             <div>
               <Button
@@ -170,6 +172,7 @@ const PendingTable = ({ data, mutation, isValidating }) => {
       isValidating={isValidating}
       setSelectedRows={setSelectedRows}
       initialState={{
+        hiddenColumns: [!hasRoleAccess("matching", "edit") ? "selection" : ""],
         pageSize: 5,
       }}
     />
@@ -234,6 +237,8 @@ const ProcessTable = ({ data, mutation, isValidating, info }) => {
     { data: CONTAINER_STATUS.TRAMITADO, status: true, color: "bg-primary-500" },
   ]);
 
+  const { hasRoleAccess } = useAuth();
+
   const tableData = useMemo(
     () =>
       data
@@ -270,9 +275,10 @@ const ProcessTable = ({ data, mutation, isValidating, info }) => {
 
           return (
             <div className="flex space-x-3 rtl:space-x-reverse">
-              {row.original.status == CONTAINER_STATUS.ESPERA && (
-                <StatusModal data={row.original} mutation={mutation} />
-              )}
+              {row.original.status == CONTAINER_STATUS.ESPERA &&
+                hasRoleAccess("matching", "edit") && (
+                  <StatusModal data={row.original} mutation={mutation} />
+                )}
             </div>
           );
         },

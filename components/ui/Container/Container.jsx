@@ -210,37 +210,39 @@ const Container = () => {
           return (
             <div className="flex space-x-3 rtl:space-x-reverse">
               <RegistryInfo data={row.original} />
-              {row.original.status != CONTAINER_STATUS.ANULADO && (
-                <>
-                  <CrudModal
-                    title="Editar"
-                    data={row.original}
-                    mutation={mutate}
-                    OpenButtonComponent={({ onClick }) => (
-                      <Tooltip
-                        content="Editar"
-                        placement="top"
-                        arrow
-                        animation="fade"
-                      >
-                        <button
-                          className="action-btn btn-warning"
-                          type="submit"
-                          onClick={onClick}
+              {row.original.status != CONTAINER_STATUS.ANULADO &&
+                hasRoleAccess("os", "edit") && (
+                  <>
+                    <CrudModal
+                      title="Editar"
+                      data={row.original}
+                      mutation={mutate}
+                      OpenButtonComponent={({ onClick }) => (
+                        <Tooltip
+                          content="Editar"
+                          placement="top"
+                          arrow
+                          animation="fade"
                         >
-                          <Icon icon="heroicons:pencil-square" />
-                        </button>
-                      </Tooltip>
-                    )}
-                  />
-                  <StatusModal data={row.original} mutation={mutate} />
-                </>
+                          <button
+                            className="action-btn btn-warning"
+                            type="submit"
+                            onClick={onClick}
+                          >
+                            <Icon icon="heroicons:pencil-square" />
+                          </button>
+                        </Tooltip>
+                      )}
+                    />
+                    <StatusModal data={row.original} mutation={mutate} />
+                  </>
+                )}
+              {hasRoleAccess("os", "delete") && (
+                <DeleteModal
+                  url={`/containers/${row.original.id}`}
+                  mutation={mutate}
+                />
               )}
-
-              <DeleteModal
-                url={`/containers/${row.original.id}`}
-                mutation={mutate}
-              />
             </div>
           );
         },
@@ -317,11 +319,13 @@ const Container = () => {
   const actionMenu = useMemo(
     () => (
       <div>
-        <CrudModal
-          title={"Crear"}
-          OpenButtonComponent={NewButton}
-          mutation={mutate}
-        />
+        {hasRoleAccess("os", "edit") && (
+          <CrudModal
+            title={"Crear"}
+            OpenButtonComponent={NewButton}
+            mutation={mutate}
+          />
+        )}
       </div>
     ),
     []

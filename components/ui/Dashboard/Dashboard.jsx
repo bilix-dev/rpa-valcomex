@@ -5,8 +5,6 @@ import CustomTable from "../CustomTable";
 import Card from "../Card";
 
 const Dashboard = ({ data }) => {
-  console.log(data);
-
   return (
     <div className="grid gap-5">
       <div className="grid md:grid-cols-3 grid-cols-1 items-center gap-5 ">

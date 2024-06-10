@@ -11,11 +11,13 @@ import Profile from "./Tools/Profile";
 import useRtl from "@/hooks/useRtl";
 import useMobileMenu from "@/hooks/useMobileMenu";
 import SearchModal from "./Tools/SearchModal";
+import useAuth from "@/hooks/useAuth";
 
 const Header = ({ className = "custom-class" }) => {
   const [collapsed, setMenuCollapsed] = useSidebar();
   const { width, breakpoints } = useWidth();
   const [navbarType] = useNavbarType();
+  const { hasRoleAccess } = useAuth();
   const navbarTypeClass = () => {
     switch (navbarType) {
       case "floating":
@@ -49,6 +51,7 @@ const Header = ({ className = "custom-class" }) => {
       return "dark:border-b dark:border-slate-700 dark:border-opacity-60";
     }
   };
+
   return (
     <header className={className + " " + navbarTypeClass()}>
       <div
@@ -88,7 +91,7 @@ const Header = ({ className = "custom-class" }) => {
                   <Icon icon="heroicons-outline:menu-alt-3" />
                 </div>
               )}
-              <SearchModal />
+              {hasRoleAccess("os", "view") && <SearchModal />}
             </div>
           )}
           {/* For Horizontal  */}
