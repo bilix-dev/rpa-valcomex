@@ -22,6 +22,7 @@ import { FilterBadge } from "@/components/partials/table/FilterBadge";
 
 const PendingTable = ({ data, mutation, isValidating }) => {
   const [selectedRows, setSelectedRows] = useState([]);
+  const [toggleRows, setToggleRows] = useState(false);
   const { hasRoleAccess } = useAuth();
   // const filteredSelectedRows = useMemo(
   //   () => selectedRows.filter((x) => x.status != CONTAINER_STATUS.PENDIENTE),
@@ -52,12 +53,12 @@ const PendingTable = ({ data, mutation, isValidating }) => {
       {
         id: "selection",
         accessor: "selection",
-        // Header: ({ getToggleAllRowsSelectedProps }) => (
-        //   <div>
-        //     {console.log(getToggleAllRowsSelectedProps())}
-        //     <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-        //   </div>
-        // ),
+        Header: ({ getToggleAllRowsSelectedProps }) => (
+          <div>
+            {console.log(getToggleAllRowsSelectedProps())}
+            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+          </div>
+        ),
         Cell: ({ row }) => (
           <div>
             {row.original.status != CONTAINER_STATUS.PENDIENTE && (
@@ -127,21 +128,34 @@ const PendingTable = ({ data, mutation, isValidating }) => {
   const actionMenu = useMemo(
     () => (
       <div>
-        {selectedRows.length > 0 && hasRoleAccess("matching", "edit") && (
-          <Tooltip content={"Procesar"} placement="top" arrow animation="fade">
-            <div>
-              <Button
-                isLoading={isMutating}
-                icon={"heroicons-outline:chevron-double-right"}
-                className={"btn-primary btn-sm rounded-[999px]"}
-                onClick={async () => {
-                  await trigger({ ids: selectedRows.map((x) => x.id) });
-                  await mutation();
-                }}
-              />
-            </div>
-          </Tooltip>
-        )}
+        {selectedRows.filter((x) => x.status != CONTAINER_STATUS.PENDIENTE)
+          .length > 0 &&
+          hasRoleAccess("matching", "edit") && (
+            <Tooltip
+              content={"Procesar"}
+              placement="top"
+              arrow
+              animation="fade"
+            >
+              <div>
+                <Button
+                  isLoading={isMutating}
+                  icon={"heroicons-outline:chevron-double-right"}
+                  className={"btn-primary btn-sm rounded-[999px]"}
+                  onClick={async () => {
+                    await trigger({
+                      ids: selectedRows
+                        .filter((x) => x.status != CONTAINER_STATUS.PENDIENTE)
+                        .map((x) => x.id),
+                    });
+                    await mutation();
+                    setToggleRows(!toggleRows);
+                    setSelectedRows([]);
+                  }}
+                />
+              </div>
+            </Tooltip>
+          )}
       </div>
     ),
     [selectedRows, isMutating]
@@ -169,12 +183,13 @@ const PendingTable = ({ data, mutation, isValidating }) => {
       columns={columns}
       data={tableData}
       ActionComponent={actionMenu}
-      isValidating={isValidating}
+      // isValidating={isValidating}
       setSelectedRows={setSelectedRows}
       initialState={{
         hiddenColumns: [!hasRoleAccess("matching", "edit") ? "selection" : ""],
         pageSize: 5,
       }}
+      toggleRows={toggleRows}
     />
   );
 };
@@ -387,7 +402,7 @@ const ProcessTable = ({ data, mutation, isValidating, info }) => {
       }
       columns={columns}
       data={tableData}
-      isValidating={isValidating}
+      // isValidating={isValidating}
       initialState={{
         pageSize: 5,
       }}

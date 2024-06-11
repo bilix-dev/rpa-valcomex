@@ -115,6 +115,7 @@ const BaseTable = ({
   setSelectedRows,
   initialState,
   isValidating,
+  toggleRows,
   ...rest
 }) => {
   const columnsMemo = useMemo(() => columns ?? [], [columns]);
@@ -162,6 +163,7 @@ const BaseTable = ({
       // }
     }
   );
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -182,12 +184,15 @@ const BaseTable = ({
     setSortBy,
     prepareRow,
     selectedFlatRows,
+    toggleAllPageRowsSelected,
   } = tableInstance;
 
   const { globalFilter, pageIndex, pageSize, filters, sortBy } = state;
   const [serverPageIndex, setServerPageIndex] = useState(pageIndex);
 
   const totalLocalRows = tableInstance.globalFilteredRows.length;
+
+  useEffect(() => toggleAllPageRowsSelected(false), [toggleRows]);
 
   useEffect(
     () =>
