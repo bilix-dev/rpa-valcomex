@@ -75,8 +75,16 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user) {
-        const { id, userName, expiration, operatorId, role, status, operator } =
-          await findLoggedUserByPk(user.id);
+        const {
+          id,
+          userName,
+          expiration,
+          expires,
+          operatorId,
+          role,
+          status,
+          operator,
+        } = await findLoggedUserByPk(user.id);
         const expired = operator.expiration
           ? new Date() > operator.expiration
           : false;
@@ -90,11 +98,12 @@ export const authOptions = {
           userName,
           operatorId,
           role,
+          user_expires: expires,
           expiration,
           valid: status && operator.status && !expired,
         };
       } else {
-        const { name, expiration, role, status, operator } =
+        const { name, expires, expiration, role, status, operator } =
           await findLoggedUserByPk(
             trigger == "update" && session?.userId ? session.userId : token.id
           );
@@ -105,6 +114,7 @@ export const authOptions = {
           ...token,
           name,
           expiration,
+          user_expires: expires,
           role,
           valid: status && operator.status && !expired,
         };
@@ -119,6 +129,7 @@ export const authOptions = {
           name: token.name,
           email: token.email,
           id: token.id,
+          user_expires: token.expires,
           expiration: token.expiration,
           operatorId: token.operatorId,
           role: token.role?.get({ plain: true }),

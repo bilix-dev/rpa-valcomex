@@ -68,9 +68,10 @@ export default withAuth(
       return NextResponse.redirect(`${req.nextUrl.origin}/dashboard`);
     }
 
-    const expiredPassword = token?.expiration
-      ? dateDiff(new Date(), new Date(token?.expiration)) < 0
-      : false;
+    const expiredPassword =
+      token?.user_expires && token?.expiration
+        ? dateDiff(new Date(), new Date(token?.expiration)) < 0
+        : false;
 
     //Si la contraseña esta expirada, redireccionar a reset password
     if (expiredPassword && !pathname.startsWith("/reset-password")) {

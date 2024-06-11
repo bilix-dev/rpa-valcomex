@@ -52,7 +52,7 @@ export default function DashboardRoot({ children }) {
   const passwordDiff = dateDiff(new Date(), new Date(user.expiration));
 
   const [passwordShow, setPasswordShow] = useState(
-    user.expiration
+    user.expires && user.expiration
       ? passwordDiff <= process.env.NEXT_PUBLIC_PASSWORD_DAYS_LIMIT
       : false
   );

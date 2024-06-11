@@ -11,6 +11,7 @@ import Container from "./container";
 import ContainerEndpoint from "./container-endpoint";
 import ContainerMatch from "./container-match";
 import Contact from "./contact";
+import Log from "./log";
 
 import { v4 as uuidv4 } from "uuid";
 import UserCreationToken from "./user-creation-token";
@@ -31,6 +32,11 @@ var User = connection.define(
     },
     expiration: {
       type: DataTypes.DATE,
+    },
+    expires: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
     },
     dni: {
       type: DataTypes.STRING,
@@ -140,6 +146,7 @@ ContainerEndpoint.beforeCreate(
 );
 ContainerMatch.beforeCreate((containerMatch) => (containerMatch.id = uuidv4()));
 Contact.beforeCreate((contacts) => (contacts.id = uuidv4()));
+Log.beforeCreate((log) => (log.id = uuidv4()));
 
 //Asociaciones
 Operator.hasMany(Role, {
@@ -248,6 +255,13 @@ Rpa.hasMany(ContainerEndpoint, {
 ContainerEndpoint.belongsTo(Rpa);
 //
 
+ContainerEndpoint.hasMany(Log, {
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+
+Log.belongsTo(ContainerEndpoint);
+
 //
 Container.hasOne(ContainerMatch, {
   foreignKey: { allowNull: false, unique: true },
@@ -268,7 +282,7 @@ ContainerMatch.belongsTo(User);
 //
 
 if (process.env.NODE_ENV == "development") {
-  // connection.sync({ alter: true });
+  //connection.sync({ alter: true });
 }
 
 export {
@@ -279,6 +293,7 @@ export {
   RoleGrant,
   Operator,
   Rpa,
+  Log,
   ServiceOrder,
   Contact,
   Container,

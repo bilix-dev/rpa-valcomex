@@ -163,9 +163,11 @@ const Profile = () => {
                 onClick={handleChangePassword}
               />
               <div className="italic text-sm">
-                {passwordMessage(
-                  dateDiff(new Date(), new Date(data.expiration))
-                )}
+                {data.expires
+                  ? passwordMessage(
+                      dateDiff(new Date(), new Date(data.expiration))
+                    )
+                  : "Contraseña no expirable."}
               </div>
             </div>
             <Button

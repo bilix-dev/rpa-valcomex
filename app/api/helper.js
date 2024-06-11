@@ -1,5 +1,5 @@
 import Jwt from "jsonwebtoken";
-import { Container, VerificationToken } from "@/database/models";
+import { Container, Log, VerificationToken } from "@/database/models";
 import { sendEmail } from "@/configs/email";
 import { render } from "@react-email/components";
 import RegisterMail from "@/emails/RegisterMail";
@@ -227,6 +227,9 @@ export async function sendDataAsync(container) {
         booking: "ZIMUSNC805613",
       },
     });
+
+    //registrar log
+    await Log.create({ ...result.data, containerEndpointId: end.id });
 
     switch (result.data.code) {
       case 0: {

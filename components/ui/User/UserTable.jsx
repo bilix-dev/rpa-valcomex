@@ -30,6 +30,7 @@ import {
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import useAxios from "@/hooks/useAxios";
+import Checkbox from "../Checkbox";
 
 const Avatar = ({
   name,
@@ -134,6 +135,7 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
   const {
     register,
     reset,
+    watch,
     control,
     formState: { errors, isSubmitting },
     handleSubmit,
@@ -210,6 +212,13 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
             type="email"
             register={register}
             error={errors?.email}
+          />
+
+          <Checkbox
+            id={`expires`}
+            register={register(`expires`)}
+            label={<div className=" ml-2 capitalize">Contraseña Expirable</div>}
+            checked={watch(`expires`)}
           />
 
           <Controller
