@@ -53,6 +53,7 @@ const PendingTable = ({ data, mutation, isValidating }) => {
       {
         id: "selection",
         accessor: "selection",
+        disableSortBy: true,
         Header: ({ getToggleAllRowsSelectedProps }) => (
           <div>
             {console.log(getToggleAllRowsSelectedProps())}
