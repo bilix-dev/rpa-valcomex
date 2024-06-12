@@ -4,7 +4,10 @@ import { NextResponse } from "next/server";
 export async function PUT(request, { params }) {
   const id = params.roleId;
   const { grants, ...data } = await request.json();
-  const role = await Role.update({ ...data }, { where: { id } });
+  const role = await Role.update(
+    { ...data },
+    { where: { id }, individualHooks: true }
+  );
 
   for (let grant of grants) {
     await RoleGrant.upsert({ ...grant, roleId: id });
