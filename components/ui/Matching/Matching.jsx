@@ -435,7 +435,7 @@ const Matching = () => {
   }
 
   return (
-    <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
+    <div className="grid 2xl:grid-cols-2 grid-cols-1 2xl:gap-x-5 gap-y-5">
       <PendingTable
         data={response?.data}
         isValidating={isValidating}

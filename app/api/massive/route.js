@@ -3,12 +3,6 @@ import {
   ContainerEndpoint,
   Rpa,
   ServiceOrder,
-  //   CntTypes,
-  //   Container,
-  //   Custom,
-  //   Deposit,
-  //   Operator,
-  //   Tatc,
   connection,
 } from "@/database/models";
 

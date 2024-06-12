@@ -242,7 +242,7 @@ const Inscription = () => {
   }, [watch("containerId")]);
 
   return (
-    <div className="grid md:grid-cols-3 grid-cols-1 gap-5">
+    <div className="grid 2xl:grid-cols-3 grid-cols-1 2xl:gap-x-5 gap-y-5">
       <form
         noValidate
         id="user-form"

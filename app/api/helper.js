@@ -1,5 +1,5 @@
 import Jwt from "jsonwebtoken";
-import { Container, Log, VerificationToken } from "@/database/models";
+import { Log, VerificationToken } from "@/database/models";
 import { sendEmail } from "@/configs/email";
 import { render } from "@react-email/components";
 import RegisterMail from "@/emails/RegisterMail";
@@ -8,20 +8,13 @@ import * as ExcelJS from "exceljs";
 import useRemoteAxios from "@/hooks/useRemoteAxios";
 import { CONTAINER_STATUS } from "@/helpers/helper";
 
-export const getOrigin = (origin) =>
-  process.env.NODE_ENV == "development"
-    ? origin
-    : process.env.NEXTAUTH_URL ?? origin;
-
 export const sendUserCreationMail = async (request, userVerification) => {
   const token = generateToken(
     userVerification.id,
     86400 * process.env.EMAIL_VERIFICATION_DAYS_LIMIT
   );
 
-  const url = `${getOrigin(request.nextUrl.origin)}/register/${
-    token.identifier
-  }/${token.token}`;
+  const url = `${process.env.NEXTAUTH_URL}/register/${token.identifier}/${token.token}`;
   await sendEmail({
     to: userVerification.email,
     subject: "Invitación a registrarse",

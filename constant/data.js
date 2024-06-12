@@ -11,7 +11,7 @@ export const menuItems = [
   },
   {
     title: "Matching",
-    icon: "heroicons:document-duplicate",
+    icon: "heroicons:document-check",
     link: "/matching",
     grant: "matching",
   },

@@ -24,6 +24,7 @@ const RegForm = ({ token, identifier, data }) => {
   const schema = yup
     .object({
       name: yup.string().required("Nombre es requerido"),
+      dni: yup.string().required("DNI es requerido"),
       userName: yup
         .string()
         .required("Usuario es requerido")
@@ -102,6 +103,15 @@ const RegForm = ({ token, identifier, data }) => {
         register={register}
         error={errors.name}
       />
+      <Textinput
+        name="dni"
+        label="DNI"
+        type="text"
+        placeholder="DNI"
+        register={register}
+        error={errors.dni}
+      />
+      <hr />
       <Textinput
         name="userName"
         label="Usuario"

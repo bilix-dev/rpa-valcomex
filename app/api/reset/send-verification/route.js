@@ -1,6 +1,6 @@
-import { Operator, User } from "@/database/models";
+import { User } from "@/database/models";
 import { NextResponse } from "next/server";
-import { generateResetToken, getOrigin } from "../../helper";
+import { generateResetToken } from "../../helper";
 import { sendEmail } from "@/configs/email";
 import ResetPasswordMail from "@/emails/ResetPasswordMail";
 import { render } from "@react-email/components";
@@ -15,9 +15,7 @@ export async function POST(request) {
       message: "Accion realizada",
     });
   const token = await generateResetToken(user.id);
-  const url = `${getOrigin(request.nextUrl.origin)}/reset-password/${
-    token.identifier
-  }/${token.token}`;
+  const url = `${process.env.NEXTAUTH_URL}/reset-password/${token.identifier}/${token.token}`;
 
   await sendEmail({
     to: user.email,

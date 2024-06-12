@@ -20,7 +20,7 @@ export const RegisterMail = ({ resetPasswordLink = "#" }) => {
           <Section>
             <Text style={text}>Hola,</Text>
             <Text style={text}>
-              Invitación para crearse una cuenta en TatcPro desde aquí:
+              Invitación para crearse una cuenta en Rpa-valcomex desde aquí:
             </Text>
             <Button style={button} href={resetPasswordLink}>
               Registrarse

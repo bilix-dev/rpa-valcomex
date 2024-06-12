@@ -16,7 +16,7 @@ export const sendEmail = async (data) => {
   });
 
   return await transporter.sendMail({
-    from: "TatcPro <" + process.env.SMTP_ADDRESS + ">",
+    from: `${process.env.SMTP_USER} <${process.env.SMTP_ADDRESS}>`,
     ...data,
   });
 };
