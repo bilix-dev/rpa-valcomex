@@ -6,6 +6,7 @@ import {
   Html,
   Preview,
   Section,
+  Tailwind,
   Text,
 } from "@react-email/components";
 import * as React from "react";
@@ -16,21 +17,28 @@ export const RegisterMail = ({ resetPasswordLink = "#" }) => {
       <Head />
       <Preview>Registrarse</Preview>
       <Body style={main}>
-        <Container style={container}>
-          <Section>
-            <Text style={text}>Hola,</Text>
-            <Text style={text}>
-              Invitación para crearse una cuenta en Rpa-valcomex desde aquí:
-            </Text>
-            <Button style={button} href={resetPasswordLink}>
-              Registrarse
-            </Button>
-            <Text style={text}>
-              Si no deseas registrarse en el sistema, puedes ignorar o eliminar
-              este mensaje.
-            </Text>
-          </Section>
-        </Container>
+        <Tailwind>
+          <Container style={container}>
+            <Section>
+              <Text style={text}>Hola,</Text>
+              <Text style={text}>
+                Invitación para crearse una cuenta en Rpa-valcomex desde aquí:
+              </Text>
+              <Section className="text-center mt-[32px] mb-[32px]">
+                <Button
+                  className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
+                  href={resetPasswordLink}
+                >
+                  Registrarse
+                </Button>
+              </Section>
+              <Text style={text}>
+                Si no deseas registrarse en el sistema, puedes ignorar o
+                eliminar este mensaje.
+              </Text>
+            </Section>
+          </Container>
+        </Tailwind>
       </Body>
     </Html>
   );
@@ -56,21 +64,4 @@ const text = {
   fontWeight: "300",
   color: "#404040",
   lineHeight: "26px",
-};
-
-const button = {
-  backgroundColor: "#007ee6",
-  borderRadius: "4px",
-  color: "#fff",
-  fontFamily: "'Open Sans', 'Helvetica Neue', Arial",
-  fontSize: "15px",
-  textDecoration: "none",
-  textAlign: "center",
-  display: "block",
-  width: "210px",
-  padding: "14px 7px",
-};
-
-const anchor = {
-  textDecoration: "underline",
 };

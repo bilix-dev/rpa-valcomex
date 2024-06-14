@@ -6,6 +6,7 @@ import {
   Html,
   Preview,
   Section,
+  Tailwind,
   Text,
 } from "@react-email/components";
 import * as React from "react";
@@ -18,24 +19,32 @@ export const ResetPasswordMail = ({
     <Html>
       <Head />
       <Preview>Reestablecer contraseña</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Section>
-            <Text style={text}>Hola {userFirstname},</Text>
-            <Text style={text}>
-              Recientemente, alguien ha solicitado un cambio de contraseña para
-              tu cuenta. Si fuiste tu, puedes cambiar la contraseña desde aquí:
-            </Text>
-            <Button style={button} href={resetPasswordLink}>
-              Resetear Contraseña
-            </Button>
-            <Text style={text}>
-              Si no quieres cambiar la contraseña, o no fuiste tu, puedes
-              ignorar o eliminar este mensaje.
-            </Text>
-          </Section>
-        </Container>
-      </Body>
+      <Tailwind>
+        <Body style={main}>
+          <Container style={container}>
+            <Section>
+              <Text style={text}>Hola {userFirstname},</Text>
+              <Text style={text}>
+                Recientemente, alguien ha solicitado un cambio de contraseña
+                para tu cuenta. Si fuiste tu, puedes cambiar la contraseña desde
+                aquí:
+              </Text>
+              <Section className="text-center mt-[32px] mb-[32px]">
+                <Button
+                  className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
+                  href={resetPasswordLink}
+                >
+                  Restablecer
+                </Button>
+              </Section>
+              <Text style={text}>
+                Si no quieres cambiar la contraseña, o no fuiste tu, puedes
+                ignorar o eliminar este mensaje.
+              </Text>
+            </Section>
+          </Container>
+        </Body>
+      </Tailwind>
     </Html>
   );
 };
@@ -60,21 +69,4 @@ const text = {
   fontWeight: "300",
   color: "#404040",
   lineHeight: "26px",
-};
-
-const button = {
-  backgroundColor: "#007ee6",
-  borderRadius: "4px",
-  color: "#fff",
-  fontFamily: "'Open Sans', 'Helvetica Neue', Arial",
-  fontSize: "15px",
-  textDecoration: "none",
-  textAlign: "center",
-  display: "block",
-  width: "210px",
-  padding: "14px 7px",
-};
-
-const anchor = {
-  textDecoration: "underline",
 };

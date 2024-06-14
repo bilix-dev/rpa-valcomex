@@ -8,7 +8,7 @@ import {
   connection,
 } from "@/database/models";
 import MatchMail from "@/emails/MatchMail";
-import { CONTAINER_STATUS } from "@/helpers/helper";
+import { CONTAINER_STATUS, toFormatContainer } from "@/helpers/helper";
 import { render } from "@react-email/components";
 import { NextResponse } from "next/server";
 
@@ -40,7 +40,9 @@ export async function POST(request) {
       sendEmail({
         to: to.map((x) => x.email),
         subject: "Nueva inscripción",
-        html: render(MatchMail({ data: fc })),
+        html: render(
+          MatchMail({ data: { ...fc, name: toFormatContainer(fc.name) } })
+        ),
       });
     }
 

@@ -1,4 +1,3 @@
-import { toFormatContainer } from "@/helpers/helper";
 import {
   Body,
   Container,
@@ -9,48 +8,81 @@ import {
   Text,
   Row,
   Column,
+  Tailwind,
 } from "@react-email/components";
 import * as React from "react";
 
-export const MatchMail = ({ data }) => {
+export const MatchMail = ({
+  data = {
+    containerMatch: {
+      plateNumber: "123456",
+      user: {
+        name: "root",
+        dni: "123456789",
+      },
+    },
+
+    serviceOrder: {
+      code: "123456",
+      booking: "123456",
+    },
+    name: "ASDF123456-7",
+  },
+}) => {
   return (
     <Html>
       <Head />
-      <Preview>Información</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Section>
-            <Text style={text}>Hola,</Text>
-            <Text style={text}>Se han registrado el siguiente contenedor:</Text>
+      <Preview>Nuevo Matching {data?.name}</Preview>
+      <Tailwind>
+        <Body style={main}>
+          <Container style={container}>
             <Section>
-              <Row>
-                <Column>OS</Column>
-                <Column>{data.serviceOrder.code}</Column>
-              </Row>
-              <Row>
-                <Column>Booking</Column>
-                <Column>{data.serviceOrder.booking}</Column>
-              </Row>
-              <Row>
-                <Column>Contenedor</Column>
-                <Column>{toFormatContainer(data.name)}</Column>
-              </Row>
-              <Row>
-                <Column>Chofer</Column>
-                <Column>{data.containerMatch.user?.name}</Column>
-              </Row>
-              <Row>
-                <Column>DNI</Column>
-                <Column>{data.containerMatch.user?.dni}</Column>
-              </Row>
-              <Row>
-                <Column>Patente</Column>
-                <Column>{data.containerMatch.plateNumber}</Column>
-              </Row>
+              <Text style={text}>Hola,</Text>
+              <Text style={text}>
+                Se han registrado el siguiente matching de contenedor:
+              </Text>
+              <Section>
+                <Row>
+                  <div style={text} className="flex flex-row justify-between">
+                    <div>OS</div>
+                    <div>{data?.serviceOrder?.code}</div>
+                  </div>
+                </Row>
+                <Row>
+                  <div style={text} className="flex flex-row justify-between">
+                    <div>Booking</div>
+                    <div>{data?.serviceOrder?.booking}</div>
+                  </div>
+                </Row>
+                <Row>
+                  <div style={text} className="flex flex-row justify-between">
+                    <div>Contenedor</div>
+                    <div>{data?.name}</div>
+                  </div>
+                </Row>
+                <Row>
+                  <div style={text} className="flex flex-row justify-between">
+                    <div>Chofer</div>
+                    <div>{data?.containerMatch?.user?.name}</div>
+                  </div>
+                </Row>
+                <Row>
+                  <div style={text} className="flex flex-row justify-between">
+                    <div>DNI</div>
+                    <div>{data?.containerMatch?.user?.dni}</div>
+                  </div>
+                </Row>
+                <Row>
+                  <div style={text} className="flex flex-row justify-between">
+                    <div>Patente</div>
+                    <div>{data?.containerMatch?.plateNumber}</div>
+                  </div>
+                </Row>
+              </Section>
             </Section>
-          </Section>
-        </Container>
-      </Body>
+          </Container>
+        </Body>
+      </Tailwind>
     </Html>
   );
 };
@@ -75,21 +107,4 @@ const text = {
   fontWeight: "300",
   color: "#404040",
   lineHeight: "26px",
-};
-
-const button = {
-  backgroundColor: "#007ee6",
-  borderRadius: "4px",
-  color: "#fff",
-  fontFamily: "'Open Sans', 'Helvetica Neue', Arial",
-  fontSize: "15px",
-  textDecoration: "none",
-  textAlign: "center",
-  display: "block",
-  width: "210px",
-  padding: "14px 7px",
-};
-
-const anchor = {
-  textDecoration: "underline",
 };
