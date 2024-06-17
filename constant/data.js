@@ -10,6 +10,10 @@ export const menuItems = [
     noAuth: true,
   },
   {
+    isHeadr: true,
+    title: "Operación",
+  },
+  {
     title: "Matching",
     icon: "heroicons:document-check",
     link: "/matching",
@@ -20,10 +24,6 @@ export const menuItems = [
     icon: "heroicons:truck",
     link: "/inscriptions",
     grant: "inscriptions",
-  },
-  {
-    isHeadr: true,
-    title: "sistema",
   },
   {
     title: "Documentos",
@@ -41,6 +41,10 @@ export const menuItems = [
         grant: "os/massive",
       },
     ],
+  },
+  {
+    isHeadr: true,
+    title: "sistema",
   },
   {
     title: "Accesos",
