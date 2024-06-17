@@ -3,9 +3,13 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import { Operator, Rpa, User } from "@/database/models";
 import DashboardRoot from "./DashboardRoot";
 import { AuthProvider } from "@/context/AuthProvider";
+import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({ children }) {
   const data = await getServerSession(authOptions);
+
+  if (data == null) return redirect("/");
+
   const user = await User.unscoped().findByPk(data.user?.id);
   const operator = await Operator.findByPk(data.user?.operatorId, {
     include: [
