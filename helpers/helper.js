@@ -43,7 +43,7 @@ export const ENDPOINTS = Object.freeze({
   sti: "STI (San Antonio)",
   silogport: "Silogport (Valparaíso)",
   tps: "TPS (San Antonio)",
-  silogport_tps: "Silogport -> TPS (Valparaíso)",
+  silogport_tps: "Silogport → TPS (Valparaíso)",
 });
 
 export const SIZE = Object.freeze({

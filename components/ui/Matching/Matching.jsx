@@ -56,7 +56,6 @@ const PendingTable = ({ data, mutation, isValidating }) => {
         disableSortBy: true,
         Header: ({ getToggleAllRowsSelectedProps }) => (
           <div>
-            {console.log(getToggleAllRowsSelectedProps())}
             <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
           </div>
         ),
