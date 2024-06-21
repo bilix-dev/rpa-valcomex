@@ -217,6 +217,8 @@ const Inscription = () => {
     .object({
       containerId: yup.string().required("Contenedor requerido"),
       plateNumber: yup.string().required("Patente requerida"),
+      micdta: yup.string().required("MIC/DTA requerido"),
+      seal: yup.string().required("Sello requerido"),
     })
     .required();
 
@@ -304,36 +306,44 @@ const Inscription = () => {
             {selectedContainer && (
               <>
                 <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-5 mb-3 text-sm">
-                  <div className="flex justify-between ">
-                    <label className="form-label block capitalize font-semibold">
-                      OS
-                    </label>
-                    <span className="flex justify-end w-full">
-                      {selectedContainer.serviceOrder.code}
-                    </span>
+                  <div className="flex justify-between items-center">
+                    <div className="capitalize font-semibold">OS</div>
+                    <span>{selectedContainer.serviceOrder.code}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <label className="form-label block capitalize font-semibold">
-                      Booking
-                    </label>
-                    <span className="flex justify-end w-full">
-                      {selectedContainer.serviceOrder.booking}
-                    </span>
+                  <div className="flex justify-between items-center">
+                    <div className="capitalize font-semibold">Booking</div>
+                    <span>{selectedContainer.serviceOrder.booking}</span>
                   </div>
                 </div>
 
                 <hr />
 
-                <div>
-                  <Textinput
-                    name="plateNumber"
-                    label="Patente"
-                    placeholder="Patente"
-                    type="text"
-                    register={register}
-                    error={errors?.plateNumber}
-                  />
-                </div>
+                <Textinput
+                  name="plateNumber"
+                  label="Patente"
+                  placeholder="Patente"
+                  type="text"
+                  register={register}
+                  error={errors?.plateNumber}
+                />
+
+                <Textinput
+                  name="micdta"
+                  label="MIC/DTA"
+                  placeholder="MIC/DTA"
+                  type="text"
+                  register={register}
+                  error={errors?.micdta}
+                />
+
+                <Textinput
+                  name="seal"
+                  label="Sello"
+                  placeholder="Sello"
+                  type="text"
+                  register={register}
+                  error={errors?.seal}
+                />
               </>
             )}
           </div>

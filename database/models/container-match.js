@@ -19,6 +19,8 @@ const initContainerMatch = (sequelize, DataTypes) => {
       },
       createdBy: DataTypes.STRING,
       updatedBy: DataTypes.STRING,
+      micdta: { type: DataTypes.STRING },
+      seal: { type: DataTypes.STRING },
     },
     {
       sequelize,

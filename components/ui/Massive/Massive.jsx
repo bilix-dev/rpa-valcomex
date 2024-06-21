@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import Card from "@/components/ui/Card";
 import useSWRPost from "@/hooks/useSWRPost";
 import { Icon } from "@iconify/react";
@@ -11,13 +11,20 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
 import Button from "../Button";
-import { alerts, getDataFromWorksheetClient } from "@/helpers/helper";
+import {
+  ENDPOINTS,
+  ENDPOINTS_KEYS,
+  EXCEL_DICTIONARY,
+  alerts,
+  getDataFromWorksheetClient,
+} from "@/helpers/helper";
 
 import * as ExcelJS from "exceljs";
 import ExcelModal from "../ExcelModal";
 import Alert from "../Alert";
 import Fileinput from "../Fileinput";
 import CustomTable from "../CustomTable";
+import { Tab } from "@headlessui/react";
 
 const Massive = () => {
   const [excel, setExcel] = useState(null);
@@ -168,16 +175,30 @@ const Massive = () => {
                           const document = await workbook.xlsx.load(
                             await file.arrayBuffer()
                           );
-                          const { titles, data } = getDataFromWorksheetClient(
-                            document.getWorksheet(1)
-                          );
-                          setExcel({
-                            headers: titles,
-                            data: data.map((d) => {
-                              const row = titles.map((h) => d[h]);
-                              return row;
-                            }),
+
+                          let aux = {};
+                          document.eachSheet((ws, i) => {
+                            if (
+                              ENDPOINTS_KEYS[ws.name] != null &&
+                              ENDPOINTS_KEYS[ws.name] != ENDPOINTS_KEYS.tps &&
+                              ENDPOINTS_KEYS[ws.name] !=
+                                ENDPOINTS_KEYS.silogport
+                            ) {
+                              const { titles, data } =
+                                getDataFromWorksheetClient(ws);
+                              aux = {
+                                ...aux,
+                                [ws.name]: {
+                                  headers: titles,
+                                  data: data.map((d) => {
+                                    const row = titles.map((h) => d[h]);
+                                    return row;
+                                  }),
+                                },
+                              };
+                            }
                           });
+                          setExcel(aux);
                           setAlert(null);
                           onChange(file);
                         } catch (e) {
@@ -201,12 +222,72 @@ const Massive = () => {
             )}
           </div>
 
-          {excel != null && (
+          {excel && (
+            <div className="mt-2">
+              <Tab.Group>
+                <Tab.List className="lg:space-x-8 md:space-x-4 space-x-0 rtl:space-x-reverse">
+                  {Object.keys(excel).map((title, i) => (
+                    <Tab as={Fragment} key={i}>
+                      {({ selected }) => (
+                        <button
+                          className={` text-sm font-medium mb-7 capitalize bg-white
+             dark:bg-slate-800 ring-0 foucs:ring-0 focus:outline-none px-2
+              transition duration-150 before:transition-all before:duration-150 relative 
+              before:absolute before:left-1/2 before:bottom-[-6px] before:h-[1.5px] before:bg-primary-500 
+              before:-translate-x-1/2 
+              
+              ${
+                selected
+                  ? "text-primary-500 before:w-full"
+                  : "text-slate-500 before:w-0 dark:text-slate-300"
+              }
+              `}
+                        >
+                          {ENDPOINTS[title]}
+                        </button>
+                      )}
+                    </Tab>
+                  ))}
+                </Tab.List>
+                <Tab.Panels>
+                  {Object.values(excel).map((entry, i) => {
+                    let indexes = entry.headers
+                      .map((e, i) =>
+                        !Object.keys(EXCEL_DICTIONARY).includes(e)
+                          ? i
+                          : undefined
+                      )
+                      .filter((x) => x !== undefined);
+
+                    const headers = entry.headers.filter(
+                      (x, i) => !indexes.includes(i)
+                    );
+
+                    const data = entry.data.map((x) =>
+                      x.filter((x, i) => !indexes.includes(i))
+                    );
+                    return (
+                      <Tab.Panel key={i}>
+                        <CustomTable
+                          key={i}
+                          headers={["ÍNDICE", ...headers]}
+                          data={data.map((x, i) => [i + 1, ...x])}
+                        />
+                      </Tab.Panel>
+                    );
+                  })}
+                </Tab.Panels>
+              </Tab.Group>
+            </div>
+          )}
+
+          {/* 
+          {excel && (
             <CustomTable
               headers={["ÍNDICE", ...excel.headers]}
               data={excel.data.map((x, i) => [i + 1, ...x])}
             />
-          )}
+          )} */}
 
           <div className="px-4 py-3 flex justify-end space-x-3 border-t border-slate-100 dark:border-slate-700">
             <Button

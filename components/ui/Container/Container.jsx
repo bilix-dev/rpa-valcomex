@@ -9,19 +9,18 @@ import Modal from "@/components/ui/Modal";
 import Tooltip from "@/components/ui/Tooltip";
 import useSWRGet from "@/hooks/useSWRGet";
 import { Icon } from "@iconify/react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Textinput from "@/components/ui/Textinput";
 import useSWRPost from "@/hooks/useSWRPost";
-import { useSWRConfig } from "swr";
 import SkeletionTable from "@/components/skeleton/Table";
 import useAuth from "@/hooks/useAuth";
-import useSWRDelete from "@/hooks/useSWRDelete";
 import useSWRPut from "@/hooks/useSWRPut";
 import {
   CONTAINER_STATUS,
+  ENDPOINTS_KEYS,
   toFormatContainer,
   toFormatDateTime,
 } from "@/helpers/helper";
@@ -33,7 +32,7 @@ import { DeleteModal } from "@/components/partials/modal/Modals";
 import Cleave from "cleave.js/react";
 import EndpointSelect from "../Selects/EndpointSelect";
 import CellStatus from "../CellStatus";
-import SizeSelect from "../Selects/SizeSelect";
+import CellMatch from "../CellMatch";
 
 const StatusModal = ({ data, mutation }) => {
   const { isMutating, trigger } = useSWRPut(`/containers/${data.id}`);
@@ -65,13 +64,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
   const { osId } = useParams();
 
   const [open, isOpen] = useState(false);
-  const schema = yup
-    .object({
-      name: yup.string().required("Contenedor requerido").validContainer(),
-      endpoint: yup.string().required("Destino requerido"),
-      size: yup.string().required("Tamaño requerido"),
-    })
-    .required();
+  const [schema, setSchema] = useState(yup.object({}));
 
   const { trigger } = data.id
     ? useSWRPut(`/containers/${data.id}`)
@@ -80,11 +73,65 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
   const {
     reset,
     control,
+    watch,
+    register,
     formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  useEffect(() => {
+    switch (watch("endpoint")) {
+      case ENDPOINTS_KEYS.pc:
+        setSchema(
+          yup
+            .object({
+              name: yup
+                .string()
+                .required("Contenedor requerido")
+                .validContainer(),
+              endpoint: yup.string().required("Destino requerido"),
+              weight: yup
+                .number()
+                .typeError("Peso requerido")
+                .required("Peso requerido"),
+              clientRut: yup.string().required("Rut cliente requerido"),
+              dispatcherRut: yup
+                .string()
+                .required("Rut transportista requerido"),
+            })
+            .required()
+        );
+        break;
+      case ENDPOINTS_KEYS.sti:
+        setSchema(
+          yup
+            .object({
+              name: yup
+                .string()
+                .required("Contenedor requerido")
+                .validContainer(),
+              endpoint: yup.string().required("Destino requerido"),
+            })
+            .required()
+        );
+        break;
+      case ENDPOINTS_KEYS.silogport_tps:
+        setSchema(
+          yup
+            .object({
+              name: yup
+                .string()
+                .required("Contenedor requerido")
+                .validContainer(),
+              endpoint: yup.string().required("Destino requerido"),
+            })
+            .required()
+        );
+        break;
+    }
+  }, [watch("endpoint")]);
 
   return (
     <>
@@ -121,7 +168,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
             isOpen(false);
           })}
         >
-          <div>
+          <div className="grid grid-cols-1 gap-2">
             <label className={`form-label block capitalize mb-2`}>
               Contenedor
             </label>
@@ -155,7 +202,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                 );
               }}
             />
-
+            {/* 
             <Controller
               control={control}
               name="size"
@@ -166,7 +213,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                   defaultValue={value}
                 />
               )}
-            />
+            /> */}
 
             <Controller
               control={control}
@@ -183,6 +230,97 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                 />
               )}
             />
+            <div className="my-2">
+              <hr />
+            </div>
+
+            {/* PC */}
+            {watch("endpoint") == ENDPOINTS_KEYS.pc && (
+              <>
+                <Textinput
+                  name="weight"
+                  label="Peso"
+                  placeholder="Peso"
+                  type="number"
+                  register={register}
+                  error={errors?.weight}
+                />
+                <div className="fromGroup">
+                  <label className={`form-label block capitalize mb-2`}>
+                    Rut Cliente
+                  </label>
+                  <Controller
+                    control={control}
+                    name={"clientRut"}
+                    render={({ field: { value, onChange } }) => {
+                      return (
+                        <>
+                          <Cleave
+                            placeholder="Rut Cliente"
+                            value={value}
+                            onChange={(e) => onChange(e.target.rawValue)}
+                            options={{
+                              delimiters: [".", ".", "-"],
+                              blocks: [2, 3, 3, 1],
+                              uppercase: true,
+                            }}
+                            className={`form-control py-2 ${
+                              errors?.clientRut
+                                ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
+                                : ""
+                            } `}
+                          />
+                          {errors?.clientRut && (
+                            <div
+                              className={` mt-2 text-danger-500 block text-sm`}
+                            >
+                              {errors?.clientRut.message}
+                            </div>
+                          )}
+                        </>
+                      );
+                    }}
+                  />
+                </div>
+                <div className="fromGroup">
+                  <label className={`form-label block capitalize mb-2`}>
+                    Rut Transportista
+                  </label>
+                  <Controller
+                    control={control}
+                    name={"dispatcherRut"}
+                    render={({ field: { value, onChange } }) => {
+                      return (
+                        <>
+                          <Cleave
+                            placeholder="Rut Transportista"
+                            value={value}
+                            onChange={(e) => onChange(e.target.rawValue)}
+                            options={{
+                              delimiters: [".", ".", "-"],
+                              blocks: [2, 3, 3, 1],
+                              uppercase: true,
+                            }}
+                            className={`form-control py-2 ${
+                              errors?.dispatcherRut
+                                ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
+                                : ""
+                            } `}
+                          />
+                          {errors?.dispatcherRut && (
+                            <div
+                              className={` mt-2 text-danger-500 block text-sm`}
+                            >
+                              {errors?.dispatcherRut.message}
+                            </div>
+                          )}
+                        </>
+                      );
+                    }}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </form>
       </Modal>
@@ -253,10 +391,6 @@ const Container = () => {
         Cell: ({ row }) => toFormatContainer(row.original.name),
       },
       {
-        Header: "Tamaño",
-        accessor: "size",
-      },
-      {
         Header: "Destino",
         accessor: "containerEndpoints",
         Cell: ({ row }) => (
@@ -288,6 +422,11 @@ const Container = () => {
               })}
           </ol>
         ),
+      },
+      {
+        Header: "Chofer",
+        accessor: "containerMatch",
+        Cell: ({ row }) => <CellMatch match={row.original.containerMatch} />,
       },
       ,
       {
@@ -338,19 +477,17 @@ const Container = () => {
   return (
     <Card>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mb-3 text-sm">
-        <div className="flex justify-between ">
-          <label className="form-label block capitalize font-semibold">
-            OS
-          </label>
-          <span className="flex justify-end w-full">{response?.data.code}</span>
+        <div className="flex justify-between items-center">
+          <div className="form-label block capitalize font-semibold">OS</div>
+          <span>{response?.data.code}</span>
         </div>
-        <div className="flex justify-between">
-          <label className="form-label block capitalize font-semibold">
-            Creación
-          </label>
-          <span className="flex justify-end w-full">
-            {toFormatDateTime(response?.data.createdAt)}
-          </span>
+        <div className="flex justify-between items-center">
+          <div className="capitalize font-semibold">Booking</div>
+          <span>{response?.data.booking}</span>
+        </div>
+        <div className="flex justify-between items-center">
+          <div className="capitalize font-semibold">Creación</div>
+          <span>{toFormatDateTime(response?.data.createdAt)}</span>
         </div>
       </div>
 

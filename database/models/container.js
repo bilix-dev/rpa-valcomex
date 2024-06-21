@@ -12,7 +12,6 @@ const initContainer = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       name: { type: DataTypes.STRING, allowNull: false },
-      size: { type: DataTypes.STRING },
       endpoint: { type: DataTypes.STRING, allowNull: false },
       status: {
         type: DataTypes.STRING,
@@ -26,6 +25,10 @@ const initContainer = (sequelize, DataTypes) => {
       voidDate: DataTypes.DATE,
       createdBy: DataTypes.STRING,
       updatedBy: DataTypes.STRING,
+      //data PC
+      weight: DataTypes.DOUBLE,
+      clientRut: DataTypes.STRING,
+      dispatcherRut: DataTypes.STRING,
     },
     {
       sequelize,

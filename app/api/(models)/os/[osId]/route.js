@@ -1,8 +1,10 @@
 import {
   Container,
   ContainerEndpoint,
+  ContainerMatch,
   Rpa,
   ServiceOrder,
+  User,
 } from "@/database/models";
 import { NextResponse } from "next/server";
 
@@ -28,7 +30,10 @@ export async function GET(request, { params }) {
     include: [
       {
         model: Container,
-        include: [{ model: ContainerEndpoint, include: [{ model: Rpa }] }],
+        include: [
+          { model: ContainerEndpoint, include: [{ model: Rpa }] },
+          { model: ContainerMatch, include: [{ model: User }] },
+        ],
       },
     ],
   });

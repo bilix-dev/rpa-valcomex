@@ -253,6 +253,11 @@ export const addDays = (date, days) =>
 
 export const EXCEL_DICTIONARY = {
   CONTENEDOR: {
+    valid_endpoints: [
+      ENDPOINTS_KEYS.pc,
+      ENDPOINTS_KEYS.sti,
+      ENDPOINTS_KEYS.silogport_tps,
+    ],
     key: "name",
     type: "CNT",
     value: "Texto",
@@ -262,33 +267,59 @@ export const EXCEL_DICTIONARY = {
       if (value == undefined) return false;
       return validator.isValid(value.replace("-", ""));
     },
-  },
-  TAMAÑO: {
-    key: "size",
-    value: "Texto (20 o 40)",
-    type: "CNT",
-    required: true,
-    test: (value) => true,
-  },
-  DESTINO: {
-    key: "endpoint",
-    value: "Texto (sti, pc, silogport_tps)",
-    type: "CNT",
-    required: true,
-    test: (value) => true,
+    format: (value) => value.replace("-", ""),
   },
   OS: {
+    valid_endpoints: [
+      ENDPOINTS_KEYS.pc,
+      ENDPOINTS_KEYS.sti,
+      ENDPOINTS_KEYS.silogport_tps,
+    ],
     key: "code",
     value: "Texto",
     type: "OS",
     required: true,
     test: (value) => true,
+    format: (value) => value,
   },
   BOOKING: {
+    valid_endpoints: [
+      ENDPOINTS_KEYS.pc,
+      ENDPOINTS_KEYS.sti,
+      ENDPOINTS_KEYS.silogport_tps,
+    ],
     key: "booking",
     value: "Texto",
     type: "OS",
     required: true,
     test: (value) => true,
+    format: (value) => value,
+  },
+  RUT: {
+    valid_endpoints: [ENDPOINTS_KEYS.pc],
+    key: "clientRut",
+    value: "Texto",
+    type: "CNT",
+    required: true,
+    test: (value) => true,
+    format: (value) => value.replace("-", "").replace(".", ""),
+  },
+  PESO: {
+    valid_endpoints: [ENDPOINTS_KEYS.pc],
+    key: "weight",
+    value: "Texto",
+    type: "CNT",
+    required: true,
+    test: (value) => true,
+    format: (value) => value,
+  },
+  TRANSPORTISTA: {
+    valid_endpoints: [ENDPOINTS_KEYS.pc],
+    key: "dispatcherRut",
+    value: "Texto",
+    type: "CNT",
+    required: true,
+    test: (value) => true,
+    format: (value) => value.replace("-", "").replace(".", ""),
   },
 };
