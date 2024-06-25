@@ -1,4 +1,10 @@
-import { Container, ContainerEndpoint, Rpa } from "@/database/models";
+import {
+  Container,
+  ContainerEndpoint,
+  ContainerMatch,
+  Rpa,
+  ServiceOrder,
+} from "@/database/models";
 import { CONTAINER_STATUS } from "@/helpers/helper";
 import { NextResponse } from "next/server";
 import { Op } from "sequelize";
@@ -11,10 +17,14 @@ export async function PUT(request, { params }) {
     where: {
       id: { [Op.in]: ids },
     },
-    include: {
-      model: ContainerEndpoint,
-      include: { model: Rpa },
-    },
+    include: [
+      {
+        model: ContainerEndpoint,
+        include: { model: Rpa },
+      },
+      { model: ContainerMatch },
+      { model: ServiceOrder },
+    ],
   });
 
   for (const container of containers) {

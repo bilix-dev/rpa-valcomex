@@ -21,7 +21,10 @@ export async function POST(request) {
     to: user.email,
     subject: "Solicitud de cambio de contraseña",
     html: render(
-      ResetPasswordMail({ userFirstname: user.name, resetPasswordLink: url })
+      ResetPasswordMail({
+        userFirstname: user.name,
+        resetPasswordLink: url,
+      })
     ),
   });
 

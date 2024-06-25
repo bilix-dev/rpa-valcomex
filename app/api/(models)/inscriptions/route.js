@@ -41,7 +41,9 @@ export async function POST(request) {
         to: to.map((x) => x.email),
         subject: "Nueva inscripción",
         html: render(
-          MatchMail({ data: { ...fc, name: toFormatContainer(fc.name) } })
+          MatchMail({
+            data: { ...fc, name: toFormatContainer(fc.name) },
+          })
         ),
       });
     }

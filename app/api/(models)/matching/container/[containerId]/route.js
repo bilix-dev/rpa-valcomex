@@ -1,5 +1,11 @@
 import { sendDataAsync } from "@/app/api/helper";
-import { Container, ContainerEndpoint, Rpa } from "@/database/models";
+import {
+  Container,
+  ContainerEndpoint,
+  ContainerMatch,
+  Rpa,
+  ServiceOrder,
+} from "@/database/models";
 import { CONTAINER_STATUS } from "@/helpers/helper";
 import useRemoteAxios from "@/hooks/useRemoteAxios";
 import { NextResponse } from "next/server";
@@ -8,10 +14,14 @@ import { Op } from "sequelize";
 export async function PUT(request, { params }) {
   const id = params.containerId;
   const container = await Container.findByPk(id, {
-    include: {
-      model: ContainerEndpoint,
-      include: { model: Rpa },
-    },
+    include: [
+      {
+        model: ContainerEndpoint,
+        include: { model: Rpa },
+      },
+      { model: ContainerMatch },
+      { model: ServiceOrder },
+    ],
   });
   if (container.status != CONTAINER_STATUS.ESPERA) {
     NextResponse.json(container);

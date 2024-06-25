@@ -6,7 +6,7 @@ import RegisterMail from "@/emails/RegisterMail";
 import { Op, Sequelize } from "sequelize";
 import * as ExcelJS from "exceljs";
 import useRemoteAxios from "@/hooks/useRemoteAxios";
-import { CONTAINER_STATUS } from "@/helpers/helper";
+import { CONTAINER_STATUS, ENDPOINTS_KEYS } from "@/helpers/helper";
 
 export const sendUserCreationMail = async (request, userVerification) => {
   const token = generateToken(
@@ -18,7 +18,11 @@ export const sendUserCreationMail = async (request, userVerification) => {
   await sendEmail({
     to: userVerification.email,
     subject: "Invitación a registrarse",
-    html: render(RegisterMail({ resetPasswordLink: url })),
+    html: render(
+      RegisterMail({
+        resetPasswordLink: url,
+      })
+    ),
   });
   return token;
 };
@@ -210,15 +214,31 @@ export async function sendDataAsync(container) {
   for (let end of container.containerEndpoints
     .filter((x) => !x.status)
     .sort((x, y) => x.order - y.order)) {
+    let payload = {
+      id: end.id,
+      booking: container.serviceOrder.booking,
+      container: container.name,
+    };
+
+    switch (end.rpa.code) {
+      case ENDPOINTS_KEYS.pc:
+        payload = {
+          ...payload,
+          clientRut: container.clientRut,
+          dispatcherRut: container.dispatcherRut,
+          weight: container.weight,
+          micdta: container.containerMatch.micdta,
+          gd: container.containerMatch.micdta,
+          seal: container.containerMatch.seal,
+        };
+        break;
+    }
+
     const result = await fetcher.post("set", {
       terminal: end.rpa.code,
       userName: end.rpa.userName,
       password: end.rpa.password,
-      payload: {
-        id: end.id,
-        container: container.name,
-        booking: "ZIMUSNC805613",
-      },
+      payload,
     });
 
     //registrar log
