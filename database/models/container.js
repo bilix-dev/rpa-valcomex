@@ -29,6 +29,11 @@ const initContainer = (sequelize, DataTypes) => {
       weight: DataTypes.DOUBLE,
       clientRut: DataTypes.STRING,
       dispatcherRut: DataTypes.STRING,
+      //data STI
+      vgmWeight: DataTypes.DOUBLE,
+      operation: DataTypes.STRING,
+      shippingCompany: DataTypes.STRING,
+      businessName: DataTypes.STRING,
     },
     {
       sequelize,

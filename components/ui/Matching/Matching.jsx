@@ -19,6 +19,7 @@ import CellStatus from "../CellStatus";
 import CellMatch from "../CellMatch";
 import StatusBar from "../StatusBar";
 import { FilterBadge } from "@/components/partials/table/FilterBadge";
+import ImageModal from "../ImageModal";
 
 const PendingTable = ({ data, mutation, isValidating }) => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -246,7 +247,8 @@ const StatusModal = ({ data, mutation }) => {
   );
 };
 
-const ProcessTable = ({ data, mutation, isValidating, info }) => {
+const ProcessTable = ({ data, mutation, info }) => {
+  const [status, setStatus] = useState({ open: false, screenshot: null });
   const [filter, setFilter] = useState([
     { data: CONTAINER_STATUS.ESPERA, status: true, color: "bg-slate-500" },
     { data: CONTAINER_STATUS.TRAMITADO, status: true, color: "bg-primary-500" },
@@ -326,18 +328,28 @@ const ProcessTable = ({ data, mutation, isValidating, info }) => {
                 return (
                   <li key={i}>
                     <div className="flex flex-row gap-2 items-center">
-                      <div>
-                        <LoadingIcon
-                          height="20"
-                          isLoading={isLoading}
-                          className={color}
-                          icon={
-                            x.status
-                              ? `heroicons-outline:check-circle`
-                              : `heroicons-outline:no-symbol`
-                          }
-                        />
-                      </div>
+                      <LoadingIcon
+                        height="20"
+                        isLoading={isLoading}
+                        className={color}
+                        onClick={
+                          x.status
+                            ? () => {
+                                setStatus({
+                                  open: true,
+                                  screenshot: x.screenshot,
+                                });
+                              }
+                            : null
+                        }
+                        style={x.status && { cursor: "pointer" }}
+                        icon={
+                          x.status
+                            ? `heroicons-outline:check-circle`
+                            : `heroicons-outline:no-symbol`
+                        }
+                      />
+
                       <span className="font-bold">{x.rpa.name}</span>
                     </div>
                   </li>
@@ -382,37 +394,41 @@ const ProcessTable = ({ data, mutation, isValidating, info }) => {
   );
 
   return (
-    <BaseTable
-      title={
-        <div className="grid grid-col-1 gap-2 me-2">
-          <div>En Proceso</div>
-          <div className="grid grid-cols-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
-            {filter.map((x, i) => (
-              <FilterBadge
-                key={i}
-                title={x.data}
-                filter={filter}
-                setFilter={setFilter}
-                colorClass={x.color}
-                count={data.filter((y) => y.status == x.data).length}
-              />
-            ))}
+    <>
+      <ImageModal title={"Ver"} status={status} setStatus={setStatus} />
+      <BaseTable
+        title={
+          <div className="grid grid-col-1 gap-2 me-2">
+            <div>En Proceso</div>
+            <div className="grid grid-cols-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
+              {filter.map((x, i) => (
+                <FilterBadge
+                  key={i}
+                  title={x.data}
+                  filter={filter}
+                  setFilter={setFilter}
+                  colorClass={x.color}
+                  count={data.filter((y) => y.status == x.data).length}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      }
-      columns={columns}
-      data={tableData}
-      // isValidating={isValidating}
-      initialState={{
-        pageSize: 5,
-      }}
-    />
+        }
+        columns={columns}
+        data={tableData}
+        // isValidating={isValidating}
+        initialState={{
+          pageSize: 5,
+        }}
+      />
+    </>
   );
 };
 
 const Matching = () => {
   const { operatorId } = useAuth();
   const ws = useWs();
+
   const {
     data: response,
     isLoading,

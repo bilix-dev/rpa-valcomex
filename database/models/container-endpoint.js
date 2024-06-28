@@ -13,6 +13,7 @@ const initContainerEndpoint = (sequelize, DataTypes) => {
       order: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
       status: { type: DataTypes.BOOLEAN, defaultValue: false },
       error: { type: DataTypes.BOOLEAN, defaultValue: false },
+      screenshot: { type: DataTypes.TEXT("medium") },
       createdBy: DataTypes.STRING,
       updatedBy: DataTypes.STRING,
     },

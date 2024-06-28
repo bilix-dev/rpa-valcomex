@@ -218,6 +218,9 @@ export async function sendDataAsync(container) {
       id: end.id,
       booking: container.serviceOrder.booking,
       container: container.name,
+      micdta: container.containerMatch.micdta,
+      gd: container.containerMatch.micdta,
+      seal: container.containerMatch.seal,
     };
 
     switch (end.rpa.code) {
@@ -227,9 +230,18 @@ export async function sendDataAsync(container) {
           clientRut: container.clientRut,
           dispatcherRut: container.dispatcherRut,
           weight: container.weight,
-          micdta: container.containerMatch.micdta,
-          gd: container.containerMatch.micdta,
-          seal: container.containerMatch.seal,
+        };
+        break;
+
+      case ENDPOINTS_KEYS.sti:
+        payload = {
+          ...payload,
+          clientRut: container.clientRut,
+          weight: container.weight,
+          vgmWeight: container.vgmWeight,
+          operation: container.operation,
+          shippingCompany: container.shippingCompany,
+          businessName: container.businessName,
         };
         break;
     }
@@ -242,11 +254,13 @@ export async function sendDataAsync(container) {
     });
 
     //registrar log
+    const screenshot = result.data.screenshot;
+    delete result.data.screenshot;
     await Log.create({ ...result.data, containerEndpointId: end.id });
 
     switch (result.data.code) {
       case 0: {
-        await end.update({ status: true });
+        await end.update({ status: true, screenshot });
         break;
       }
       case 1:

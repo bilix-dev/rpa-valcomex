@@ -25,7 +25,6 @@ import {
   toFormatDateTime,
 } from "@/helpers/helper";
 import LoadingIcon from "@/components/ui/LoadingIcon";
-import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
 import Card from "../Card";
 import { DeleteModal } from "@/components/partials/modal/Modals";
@@ -33,8 +32,9 @@ import Cleave from "cleave.js/react";
 import EndpointSelect from "../Selects/EndpointSelect";
 import CellStatus from "../CellStatus";
 import CellMatch from "../CellMatch";
+import ImageModal from "../ImageModal";
 
-const StatusModal = ({ data, mutation }) => {
+const VoidModal = ({ data, mutation }) => {
   const { isMutating, trigger } = useSWRPut(`/containers/${data.id}`);
   return (
     <Tooltip content="Anular" placement="top" arrow animation="fade">
@@ -55,6 +55,29 @@ const StatusModal = ({ data, mutation }) => {
           icon="heroicons:code-bracket-square"
           isLoading={isMutating}
         />
+      </button>
+    </Tooltip>
+  );
+};
+
+const StatusModal = ({ data, mutation }) => {
+  const { isMutating, trigger } = useSWRPut(`/containers/${data.id}`);
+  return (
+    <Tooltip content="Finalizar" placement="top" arrow animation="fade">
+      <button
+        className="action-btn btn-success"
+        type="button"
+        disabled={isMutating}
+        onClick={async () => {
+          await trigger({
+            ...data,
+            status: CONTAINER_STATUS.FINALIZADO,
+            endDate: new Date(),
+          });
+          await mutation();
+        }}
+      >
+        <LoadingIcon icon="heroicons:check" isLoading={isMutating} />
       </button>
     </Tooltip>
   );
@@ -113,6 +136,18 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                 .required("Contenedor requerido")
                 .validContainer(),
               endpoint: yup.string().required("Destino requerido"),
+              weight: yup
+                .number()
+                .typeError("Peso neto requerido")
+                .required("Peso neto requerido"),
+              vgmWeight: yup
+                .number()
+                .typeError("Peso VGM requerido")
+                .required("Peso VGM requerido"),
+              operation: yup.string().required("Código de operación requerido"),
+              clientRut: yup.string().required("Rut cliente requerido"),
+              shippingCompany: yup.string().required("Razón social requerida"),
+              businessName: yup.string().required("Código naviera requerido"),
             })
             .required()
         );
@@ -233,94 +268,180 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
             <div className="my-2">
               <hr />
             </div>
+            <div className="grid sm:grid-cols-2 grid-cols-1 gap-2">
+              {/*STI*/}
+              {watch("endpoint") == ENDPOINTS_KEYS.sti && (
+                <>
+                  <Textinput
+                    name="operation"
+                    label="Operación"
+                    placeholder="Operación"
+                    type="text"
+                    register={register}
+                    error={errors?.operation}
+                  />
+                  <Textinput
+                    name="shippingCompany"
+                    label="Código Naviera"
+                    placeholder="Código Naviera"
+                    type="text"
+                    register={register}
+                    error={errors?.shippingCompany}
+                  />
+                  <Textinput
+                    name="weight"
+                    label="Peso Neto"
+                    placeholder="Peso Neto"
+                    type="number"
+                    register={register}
+                    error={errors?.weight}
+                  />
+                  <Textinput
+                    name="vgmWeight"
+                    label="Peso VGM"
+                    placeholder="Peso VGM"
+                    type="number"
+                    register={register}
+                    error={errors?.vgmWeight}
+                  />
 
-            {/* PC */}
-            {watch("endpoint") == ENDPOINTS_KEYS.pc && (
-              <>
-                <Textinput
-                  name="weight"
-                  label="Peso"
-                  placeholder="Peso"
-                  type="number"
-                  register={register}
-                  error={errors?.weight}
-                />
-                <div className="fromGroup">
-                  <label className={`form-label block capitalize mb-2`}>
-                    Rut Cliente
-                  </label>
-                  <Controller
-                    control={control}
-                    name={"clientRut"}
-                    render={({ field: { value, onChange } }) => {
-                      return (
-                        <>
-                          <Cleave
-                            placeholder="Rut Cliente"
-                            value={value}
-                            onChange={(e) => onChange(e.target.rawValue)}
-                            options={{
-                              delimiters: [".", ".", "-"],
-                              blocks: [2, 3, 3, 1],
-                              uppercase: true,
-                            }}
-                            className={`form-control py-2 ${
-                              errors?.clientRut
-                                ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
-                                : ""
-                            } `}
-                          />
-                          {errors?.clientRut && (
-                            <div
-                              className={` mt-2 text-danger-500 block text-sm`}
-                            >
-                              {errors?.clientRut.message}
-                            </div>
-                          )}
-                        </>
-                      );
-                    }}
+                  <Textinput
+                    name="businessName"
+                    label="Razón Social"
+                    placeholder="Razón Social"
+                    type="text"
+                    register={register}
+                    error={errors?.businessName}
                   />
-                </div>
-                <div className="fromGroup">
-                  <label className={`form-label block capitalize mb-2`}>
-                    Rut Transportista
-                  </label>
-                  <Controller
-                    control={control}
-                    name={"dispatcherRut"}
-                    render={({ field: { value, onChange } }) => {
-                      return (
-                        <>
-                          <Cleave
-                            placeholder="Rut Transportista"
-                            value={value}
-                            onChange={(e) => onChange(e.target.rawValue)}
-                            options={{
-                              delimiters: [".", ".", "-"],
-                              blocks: [2, 3, 3, 1],
-                              uppercase: true,
-                            }}
-                            className={`form-control py-2 ${
-                              errors?.dispatcherRut
-                                ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
-                                : ""
-                            } `}
-                          />
-                          {errors?.dispatcherRut && (
-                            <div
-                              className={` mt-2 text-danger-500 block text-sm`}
-                            >
-                              {errors?.dispatcherRut.message}
-                            </div>
-                          )}
-                        </>
-                      );
-                    }}
+
+                  <div className="fromGroup">
+                    <label className={`form-label block capitalize mb-2`}>
+                      Rut Cliente
+                    </label>
+                    <Controller
+                      control={control}
+                      name={"clientRut"}
+                      render={({ field: { value, onChange } }) => {
+                        return (
+                          <>
+                            <Cleave
+                              placeholder="Rut Cliente"
+                              value={value}
+                              onChange={(e) => onChange(e.target.rawValue)}
+                              options={{
+                                delimiters: [".", ".", "-"],
+                                blocks: [2, 3, 3, 1],
+                                uppercase: true,
+                              }}
+                              className={`form-control py-2 ${
+                                errors?.clientRut
+                                  ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
+                                  : ""
+                              } `}
+                            />
+                            {errors?.clientRut && (
+                              <div
+                                className={` mt-2 text-danger-500 block text-sm`}
+                              >
+                                {errors?.clientRut.message}
+                              </div>
+                            )}
+                          </>
+                        );
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* PC */}
+              {watch("endpoint") == ENDPOINTS_KEYS.pc && (
+                <>
+                  <Textinput
+                    name="weight"
+                    label="Peso"
+                    placeholder="Peso"
+                    type="number"
+                    register={register}
+                    error={errors?.weight}
                   />
-                </div>
-              </>
-            )}
+                  <div className="fromGroup">
+                    <label className={`form-label block capitalize mb-2`}>
+                      Rut Cliente
+                    </label>
+                    <Controller
+                      control={control}
+                      name={"clientRut"}
+                      render={({ field: { value, onChange } }) => {
+                        return (
+                          <>
+                            <Cleave
+                              placeholder="Rut Cliente"
+                              value={value}
+                              onChange={(e) => onChange(e.target.rawValue)}
+                              options={{
+                                delimiters: [".", ".", "-"],
+                                blocks: [2, 3, 3, 1],
+                                uppercase: true,
+                              }}
+                              className={`form-control py-2 ${
+                                errors?.clientRut
+                                  ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
+                                  : ""
+                              } `}
+                            />
+                            {errors?.clientRut && (
+                              <div
+                                className={` mt-2 text-danger-500 block text-sm`}
+                              >
+                                {errors?.clientRut.message}
+                              </div>
+                            )}
+                          </>
+                        );
+                      }}
+                    />
+                  </div>
+                  <div className="fromGroup">
+                    <label className={`form-label block capitalize mb-2`}>
+                      Rut Transportista
+                    </label>
+                    <Controller
+                      control={control}
+                      name={"dispatcherRut"}
+                      render={({ field: { value, onChange } }) => {
+                        return (
+                          <>
+                            <Cleave
+                              placeholder="Rut Transportista"
+                              value={value}
+                              onChange={(e) => onChange(e.target.rawValue)}
+                              options={{
+                                delimiters: [".", ".", "-"],
+                                blocks: [2, 3, 3, 1],
+                                uppercase: true,
+                              }}
+                              className={`form-control py-2 ${
+                                errors?.dispatcherRut
+                                  ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
+                                  : ""
+                              } `}
+                            />
+                            {errors?.dispatcherRut && (
+                              <div
+                                className={` mt-2 text-danger-500 block text-sm`}
+                              >
+                                {errors?.dispatcherRut.message}
+                              </div>
+                            )}
+                          </>
+                        );
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </form>
       </Modal>
@@ -329,6 +450,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
 };
 
 const Container = () => {
+  const [status, setStatus] = useState({ open: false, screenshot: null });
   const { osId } = useParams();
   const { hasRoleAccess } = useAuth();
   const {
@@ -351,28 +473,39 @@ const Container = () => {
               {row.original.status != CONTAINER_STATUS.ANULADO &&
                 hasRoleAccess("os", "edit") && (
                   <>
-                    <CrudModal
-                      title="Editar"
-                      data={row.original}
-                      mutation={mutate}
-                      OpenButtonComponent={({ onClick }) => (
-                        <Tooltip
-                          content="Editar"
-                          placement="top"
-                          arrow
-                          animation="fade"
-                        >
-                          <button
-                            className="action-btn btn-warning"
-                            type="submit"
-                            onClick={onClick}
-                          >
-                            <Icon icon="heroicons:pencil-square" />
-                          </button>
-                        </Tooltip>
+                    {row.original.status != CONTAINER_STATUS.FINALIZADO &&
+                      row.original.status != CONTAINER_STATUS.TRAMITADO && (
+                        <CrudModal
+                          title="Editar"
+                          data={row.original}
+                          mutation={mutate}
+                          OpenButtonComponent={({ onClick }) => (
+                            <Tooltip
+                              content="Editar"
+                              placement="top"
+                              arrow
+                              animation="fade"
+                            >
+                              <button
+                                className="action-btn btn-warning"
+                                type="submit"
+                                onClick={onClick}
+                              >
+                                <Icon icon="heroicons:pencil-square" />
+                              </button>
+                            </Tooltip>
+                          )}
+                        />
                       )}
-                    />
-                    <StatusModal data={row.original} mutation={mutate} />
+
+                    {row.original.status == CONTAINER_STATUS.TRAMITADO && (
+                      <StatusModal data={row.original} mutation={mutate} />
+                    )}
+
+                    {row.original.status != CONTAINER_STATUS.FINALIZADO &&
+                      row.original.status != CONTAINER_STATUS.TRAMITADO && (
+                        <VoidModal data={row.original} mutation={mutate} />
+                      )}
                   </>
                 )}
               {hasRoleAccess("os", "delete") && (
@@ -408,6 +541,17 @@ const Container = () => {
                         <Icon
                           height="20"
                           className={color}
+                          onClick={
+                            x.status
+                              ? () => {
+                                  setStatus({
+                                    open: true,
+                                    screenshot: x.screenshot,
+                                  });
+                                }
+                              : null
+                          }
+                          style={x.status && { cursor: "pointer" }}
                           icon={
                             x.status
                               ? `heroicons-outline:check-circle`
@@ -492,6 +636,7 @@ const Container = () => {
       </div>
 
       <hr />
+      <ImageModal title={"Ver"} status={status} setStatus={setStatus} />
       <BaseTable
         bodyClass={"mt-3"}
         noClass={true}
