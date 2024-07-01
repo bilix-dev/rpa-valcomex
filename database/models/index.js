@@ -117,22 +117,6 @@ connection.addHook("beforeUpdate", async (e) => {
   }
 });
 
-User.beforeBulkCreate((users, options) => {
-  for (const user of users) {
-    if (user.isMember) {
-      user.memberSince = new Date();
-    }
-  }
-
-  // Add `memberSince` to updateOnDuplicate otherwise it won't be persisted
-  if (
-    options.updateOnDuplicate &&
-    !options.updateOnDuplicate.includes("memberSince")
-  ) {
-    options.updateOnDuplicate.push("memberSince");
-  }
-});
-
 //IDs
 connection.models.user.beforeCreate((user) => (user.id = uuidv4()));
 Role.beforeCreate((role) => (role.id = uuidv4()));

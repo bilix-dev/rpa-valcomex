@@ -12,6 +12,10 @@ const IconBar = ({ type, current, next, date, voided = false }) => {
   let color = "text-slate-500";
   let size = 18;
 
+  const content = `${type[0].toUpperCase() + type.slice(1)} ${
+    date ? toFormatDateTime(date) : ""
+  }`;
+
   if (voided) {
     icon = `heroicons-solid:x-circle`;
     color = "text-danger-500";
@@ -29,17 +33,7 @@ const IconBar = ({ type, current, next, date, voided = false }) => {
     }
   }
   return (
-    <Tooltip
-      html={
-        <div className="flex flex-row gap-2">
-          <div className="lowercase capitalize">{type}</div>
-          {!isFuture && <div>{toFormatDateTime(date)}</div>}
-        </div>
-      }
-      placement="top"
-      arrow
-      animation="fade"
-    >
+    <Tooltip content={content} placement="top" arrow animation="fade">
       <div>
         <Icon height={size} className={color} icon={icon} />
       </div>
