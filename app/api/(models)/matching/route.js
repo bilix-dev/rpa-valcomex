@@ -2,8 +2,10 @@ import {
   Container,
   ContainerEndpoint,
   ContainerMatch,
+  Operator,
   Rpa,
   ServiceOrder,
+  User,
 } from "@/database/models";
 import { CONTAINER_STATUS } from "@/helpers/helper";
 import { NextResponse } from "next/server";
@@ -22,8 +24,8 @@ export async function PUT(request, { params }) {
         model: ContainerEndpoint,
         include: { model: Rpa },
       },
-      { model: ContainerMatch },
-      { model: ServiceOrder },
+      { model: ContainerMatch, include: [{ model: User }] },
+      { model: ServiceOrder, include: [{ model: Operator }] },
     ],
   });
 

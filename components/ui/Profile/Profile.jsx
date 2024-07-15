@@ -20,6 +20,7 @@ import useSWRPost from "@/hooks/useSWRPost";
 import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { useSystemData } from "@/context/AuthProvider";
+import CountrySelect from "../Selects/CountrySelect";
 
 const Profile = () => {
   const { user: data } = useSystemData();
@@ -48,6 +49,7 @@ const Profile = () => {
     .object({
       name: yup.string().required("Nombre requerido"),
       dni: yup.string().required("DNI requerido"),
+      country: yup.string().required("País requerido"),
     })
     .required();
 
@@ -132,6 +134,21 @@ const Profile = () => {
                 name={"dni"}
                 register={register}
                 error={errors?.dni}
+              />
+
+              <Controller
+                control={control}
+                name="country"
+                render={({ field: { value, onChange } }) => (
+                  <div>
+                    <CountrySelect defaultValue={value} onChange={onChange} />
+                    {errors.country && (
+                      <div className={`mt-2 text-danger-500 block text-sm`}>
+                        {errors.country.message}
+                      </div>
+                    )}
+                  </div>
+                )}
               />
             </div>
             <div>

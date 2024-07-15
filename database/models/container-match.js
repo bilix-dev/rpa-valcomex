@@ -12,6 +12,7 @@ const initContainerMatch = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       plateNumber: { type: DataTypes.STRING, allowNull: false },
+      plateNumberCountry: { type: DataTypes.STRING },
       containerId: {
         type: DataTypes.UUID,
         allowNull: false,

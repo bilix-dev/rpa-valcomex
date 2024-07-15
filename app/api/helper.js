@@ -230,6 +230,7 @@ export async function sendDataAsync(container) {
           clientRut: container.clientRut,
           dispatcherRut: container.dispatcherRut,
           weight: container.weight,
+          tariffCode: container.serviceOrder.operator.tariffCode,
         };
         break;
 
@@ -242,6 +243,19 @@ export async function sendDataAsync(container) {
           operation: container.operation,
           shippingCompany: container.shippingCompany,
           businessName: container.businessName,
+        };
+        break;
+
+      case ENDPOINTS_KEYS.silogport:
+        payload = {
+          ...payload,
+          plateNumber: container.containerMatch.plateNumber,
+          plateNumberCountry: container.containerMatch.plateNumberCountry,
+          dni: container.containerMatch.user.dni,
+          country: container.containerMatch.user.country,
+          ship: container.ship,
+          custom: container.custom,
+          containerType: container.containerType,
         };
         break;
     }

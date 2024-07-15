@@ -51,6 +51,19 @@ export const SIZE = Object.freeze({
   40: 40,
 });
 
+export const COUNTRY = Object.freeze({
+  ARGENTINA: "ARGENTINA",
+  CHILE: "CHILE",
+});
+
+export const CONTAINER_TYPE = Object.freeze({
+  CONT20: "CONT20",
+  CONT40: "CONT40",
+  REEFER20: "REEFER20",
+  REEFER40: "REEFER40",
+  CONTNOESP: "CONTNOESP",
+});
+
 export const ENDPOINTS_KEYS = Object.keys(ENDPOINTS)
   .map((x) => ({ [x]: x }))
   .reduce((x, y) => ({ ...x, ...y }), {});

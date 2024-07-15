@@ -41,6 +41,7 @@ var User = connection.define(
     dni: {
       type: DataTypes.STRING,
     },
+    country: { type: DataTypes.STRING },
     status: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,

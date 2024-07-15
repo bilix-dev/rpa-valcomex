@@ -33,6 +33,7 @@ import EndpointSelect from "../Selects/EndpointSelect";
 import CellStatus from "../CellStatus";
 import CellMatch from "../CellMatch";
 import ImageModal from "../ImageModal";
+import ContainerTypeSelect from "../Selects/ContainerTypeSelect";
 
 const VoidModal = ({ data, mutation }) => {
   const { isMutating, trigger } = useSWRPut(`/containers/${data.id}`);
@@ -161,6 +162,9 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                 .required("Contenedor requerido")
                 .validContainer(),
               endpoint: yup.string().required("Destino requerido"),
+              ship: yup.string().required("Nave requerida"),
+              custom: yup.string().required("Aduana requerida"),
+              containerType: yup.string().required("Tipo contenedor requerido"),
             })
             .required()
         );
@@ -259,6 +263,10 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     data.status != null &&
                     data.status != CONTAINER_STATUS.PENDIENTE
                   }
+                  menuPortalTarget={document.body}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  }}
                   onChange={onChange}
                   error={errors?.endpoint}
                   defaultValue={value}
@@ -269,6 +277,50 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
               <hr />
             </div>
             <div className="grid sm:grid-cols-2 grid-cols-1 gap-2">
+              {/*Silogport_TPS*/}
+              {watch("endpoint") == ENDPOINTS_KEYS.silogport_tps && (
+                <>
+                  <Controller
+                    control={control}
+                    name="containerType"
+                    render={({ field: { value, onChange } }) => (
+                      <div>
+                        <ContainerTypeSelect
+                          defaultValue={value}
+                          onChange={onChange}
+                          menuPortalTarget={document.body}
+                          styles={{
+                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                          }}
+                        />
+                        {errors.containerType && (
+                          <div className={`mt-2 text-danger-500 block text-sm`}>
+                            {errors.containerType.message}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  />
+                  <Textinput
+                    name="ship"
+                    label="Nave"
+                    placeholder="Nave"
+                    type="text"
+                    register={register}
+                    error={errors?.ship}
+                  />
+
+                  <Textinput
+                    name="custom"
+                    label="Aduana"
+                    placeholder="Aduana"
+                    type="text"
+                    register={register}
+                    error={errors?.custom}
+                  />
+                </>
+              )}
+
               {/*STI*/}
               {watch("endpoint") == ENDPOINTS_KEYS.sti && (
                 <>

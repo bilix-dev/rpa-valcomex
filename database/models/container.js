@@ -34,6 +34,11 @@ const initContainer = (sequelize, DataTypes) => {
       operation: DataTypes.STRING,
       shippingCompany: DataTypes.STRING,
       businessName: DataTypes.STRING,
+
+      //data SILOGPORT
+      containerType: DataTypes.STRING,
+      custom: DataTypes.STRING,
+      ship: DataTypes.STRING,
     },
     {
       sequelize,

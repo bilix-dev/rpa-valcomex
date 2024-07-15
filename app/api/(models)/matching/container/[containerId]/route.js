@@ -3,13 +3,13 @@ import {
   Container,
   ContainerEndpoint,
   ContainerMatch,
+  Operator,
   Rpa,
   ServiceOrder,
+  User,
 } from "@/database/models";
 import { CONTAINER_STATUS } from "@/helpers/helper";
-import useRemoteAxios from "@/hooks/useRemoteAxios";
 import { NextResponse } from "next/server";
-import { Op } from "sequelize";
 
 export async function PUT(request, { params }) {
   const id = params.containerId;
@@ -19,8 +19,8 @@ export async function PUT(request, { params }) {
         model: ContainerEndpoint,
         include: { model: Rpa },
       },
-      { model: ContainerMatch },
-      { model: ServiceOrder },
+      { model: ContainerMatch, include: [{ model: User }] },
+      { model: ServiceOrder, include: [{ model: Operator }] },
     ],
   });
   if (container.status != CONTAINER_STATUS.ESPERA) {

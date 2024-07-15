@@ -23,6 +23,7 @@ import { Icon } from "@iconify/react";
 import StatusBar from "../StatusBar";
 import { FilterBadge } from "@/components/partials/table/FilterBadge";
 import ImageModal from "../ImageModal";
+import CountrySelect from "../Selects/CountrySelect";
 
 const StatusModal = ({ data, mutation }) => {
   const { isMutating, trigger } = useSWRPut(`/containers/${data.id}`);
@@ -237,6 +238,7 @@ const Inscription = () => {
       plateNumber: yup.string().required("Patente requerida"),
       micdta: yup.string().required("MIC/DTA requerido"),
       seal: yup.string().required("Sello requerido"),
+      plateNumberCountry: yup.string().required("País requerido"),
     })
     .required();
 
@@ -343,6 +345,24 @@ const Inscription = () => {
                   type="text"
                   register={register}
                   error={errors?.plateNumber}
+                />
+
+                <Controller
+                  control={control}
+                  name="plateNumberCountry"
+                  render={({ field: { onChange } }) => (
+                    <div>
+                      <CountrySelect
+                        label={"País Patente"}
+                        onChange={onChange}
+                      />
+                      {errors.plateNumberCountry && (
+                        <div className={`mt-2 text-danger-500 block text-sm`}>
+                          {errors.plateNumberCountry.message}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 />
 
                 <Textinput
