@@ -13,6 +13,7 @@ import {
 } from "@/database/models";
 import MatchMail from "@/emails/MatchMail";
 import { render } from "@react-email/components";
+import { CONTAINER_STATUS } from "@/helpers/helper";
 
 export async function GET(request) {
   const headersList = headers();
@@ -44,6 +45,7 @@ export async function GET(request) {
 export async function POST(request) {
   const headersList = headers();
   const userName = headersList.get("userName");
+  const userId = headersList.get("userId");
 
   const data = await request.json();
   const t = await connection.transaction();
@@ -61,7 +63,7 @@ export async function POST(request) {
       }
     );
     await ContainerMatch.create(
-      { ...data, createdBy: userName },
+      { ...data, userId: userId, createdBy: userName },
       { transaction: t }
     );
 
@@ -91,6 +93,6 @@ export async function POST(request) {
     return NextResponse.json({ status: 0 });
   } catch (e) {
     await t.rollback();
-    return NextResponse.json({ status: 1 }, { status: 400 });
+    return NextResponse.json({ status: 1, error: e?.message }, { status: 400 });
   }
 }
