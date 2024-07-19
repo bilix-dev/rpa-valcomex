@@ -37,11 +37,13 @@ export async function GET(request) {
         include: [{ model: Rpa }],
       },
     ],
+    order: [["matchDate", "DESC"]],
   });
 
   return NextResponse.json(containers);
 }
 
+//VALIDACION
 export async function POST(request) {
   const headersList = headers();
   const userName = headersList.get("userName");
@@ -50,6 +52,17 @@ export async function POST(request) {
   const data = await request.json();
   const t = await connection.transaction();
   try {
+    const container = await Container.findByPk(data.containerId, {
+      transaction: t,
+    });
+
+    if (container.status != CONTAINER_STATUS.PENDIENTE) {
+      await t.rollback();
+      return NextResponse.json(
+        { status: 1, error: "Contenedor no está en estado pendiente" },
+        { status: 400 }
+      );
+    }
     await Container.update(
       {
         status: CONTAINER_STATUS.MATCH,

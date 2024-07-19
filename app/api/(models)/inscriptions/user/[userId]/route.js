@@ -27,6 +27,7 @@ export async function GET(request, { params }) {
         include: [{ model: Rpa }],
       },
     ],
+    order: [["matchDate", "DESC"]],
   });
 
   return NextResponse.json(containers);
