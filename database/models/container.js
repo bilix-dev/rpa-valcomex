@@ -28,7 +28,7 @@ const initContainer = (sequelize, DataTypes) => {
       //data PC
       weight: DataTypes.DOUBLE,
       clientRut: DataTypes.STRING,
-      dispatcherRut: DataTypes.STRING,
+      dispatcher: DataTypes.STRING,
       //data STI
       vgmWeight: DataTypes.DOUBLE,
       operation: DataTypes.STRING,

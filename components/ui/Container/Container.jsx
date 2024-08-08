@@ -121,9 +121,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                 .typeError("Peso requerido")
                 .required("Peso requerido"),
               clientRut: yup.string().required("Rut cliente requerido"),
-              dispatcherRut: yup
-                .string()
-                .required("Rut transportista requerido"),
+              dispatcher: yup.string().required("Transportista requerido"),
             })
             .required()
         );
@@ -454,43 +452,14 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                       }}
                     />
                   </div>
-                  <div className="fromGroup">
-                    <label className={`form-label block capitalize mb-2`}>
-                      Rut Transportista
-                    </label>
-                    <Controller
-                      control={control}
-                      name={"dispatcherRut"}
-                      render={({ field: { value, onChange } }) => {
-                        return (
-                          <>
-                            <Cleave
-                              placeholder="Rut Transportista"
-                              value={value}
-                              onChange={(e) => onChange(e.target.rawValue)}
-                              options={{
-                                delimiters: [".", ".", "-"],
-                                blocks: [2, 3, 3, 1],
-                                uppercase: true,
-                              }}
-                              className={`form-control py-2 ${
-                                errors?.dispatcherRut
-                                  ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
-                                  : ""
-                              } `}
-                            />
-                            {errors?.dispatcherRut && (
-                              <div
-                                className={` mt-2 text-danger-500 block text-sm`}
-                              >
-                                {errors?.dispatcherRut.message}
-                              </div>
-                            )}
-                          </>
-                        );
-                      }}
-                    />
-                  </div>
+                  <Textinput
+                    name="dispatcher"
+                    label="Transportista"
+                    placeholder="Transportista"
+                    type="text"
+                    register={register}
+                    error={errors?.dispatcher}
+                  />
                 </>
               )}
             </div>

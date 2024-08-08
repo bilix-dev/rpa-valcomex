@@ -228,7 +228,7 @@ export async function sendDataAsync(container) {
         payload = {
           ...payload,
           clientRut: container.clientRut,
-          dispatcherRut: container.dispatcherRut,
+          dispatcher: container.dispatcher,
           weight: container.weight,
           tariffCode: container.serviceOrder.operator.tariffCode,
         };

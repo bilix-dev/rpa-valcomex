@@ -367,8 +367,8 @@ const Inscription = () => {
 
                 <Textinput
                   name="micdta"
-                  label="MIC/DTA"
-                  placeholder="MIC/DTA"
+                  label="MIC/DTA de USPALLATA"
+                  placeholder="MIC/DTA de USPALLATA"
                   type="text"
                   register={register}
                   error={errors?.micdta}
@@ -376,8 +376,8 @@ const Inscription = () => {
 
                 <Textinput
                   name="seal"
-                  label="Sello"
-                  placeholder="Sello"
+                  label="Sello Aduana Argentina"
+                  placeholder="Sello Aduana Argentina"
                   type="text"
                   register={register}
                   error={errors?.seal}

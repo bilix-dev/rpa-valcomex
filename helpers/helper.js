@@ -328,7 +328,7 @@ export const EXCEL_DICTIONARY = {
   },
   TRANSPORTISTA: {
     valid_endpoints: [ENDPOINTS_KEYS.pc],
-    key: "dispatcherRut",
+    key: "dispatcher",
     value: "Texto",
     type: "CNT",
     required: true,
