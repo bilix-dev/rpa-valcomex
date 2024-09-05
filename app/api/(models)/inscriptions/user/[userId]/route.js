@@ -4,6 +4,7 @@ import {
   ContainerMatch,
   Rpa,
   ServiceOrder,
+  User,
 } from "@/database/models";
 import { NextResponse } from "next/server";
 
@@ -17,6 +18,7 @@ export async function GET(request, { params }) {
       {
         required: true,
         model: ContainerMatch,
+        include: [{ model: User }],
         where: {
           userId,
         },

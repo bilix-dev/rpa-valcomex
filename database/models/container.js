@@ -37,8 +37,14 @@ const initContainer = (sequelize, DataTypes) => {
 
       //data SILOGPORT
       containerType: DataTypes.STRING,
-      custom: DataTypes.STRING,
       ship: DataTypes.STRING,
+
+      //data TPS
+      vgmWeightVerifier: DataTypes.DOUBLE,
+      weightChargeOnly: DataTypes.DOUBLE,
+      isoCode: DataTypes.DOUBLE,
+      numCartaPorte: DataTypes.STRING,
+      consignee: DataTypes.STRING,
     },
     {
       sequelize,

@@ -31,6 +31,7 @@ export async function GET(request, { params }) {
       {
         model: Container,
         include: [
+          { model: ServiceOrder },
           { model: ContainerEndpoint, include: [{ model: Rpa }] },
           { model: ContainerMatch, include: [{ model: User }] },
         ],

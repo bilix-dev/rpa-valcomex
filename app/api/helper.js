@@ -230,7 +230,7 @@ export async function sendDataAsync(container) {
           clientRut: container.clientRut,
           dispatcher: container.dispatcher,
           weight: container.weight,
-          tariffCode: container.serviceOrder.operator.tariffCode,
+          tariffCode: "220421",
         };
         break;
 
@@ -246,7 +246,7 @@ export async function sendDataAsync(container) {
         };
         break;
 
-      case ENDPOINTS_KEYS.silogport:
+      case ENDPOINTS_KEYS.silogport_tps:
         payload = {
           ...payload,
           plateNumber: container.containerMatch.plateNumber,
@@ -254,8 +254,13 @@ export async function sendDataAsync(container) {
           dni: container.containerMatch.user.dni,
           country: container.containerMatch.user.country,
           ship: container.ship,
-          custom: container.custom,
+          custom: "VALCOMEX",
           containerType: container.containerType,
+          vgmWeightVerifier: container.vgmWeightVerifier,
+          weightChargeOnly: container.weightChargeOnly,
+          isoCode: container.isoCode,
+          numCartaPorte: container.numCartaPorte,
+          consignee: container.consignee,
         };
         break;
     }

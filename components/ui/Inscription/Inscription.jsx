@@ -11,7 +11,12 @@ import Button from "../Button";
 import useSWRPost from "@/hooks/useSWRPost";
 import { useSWRConfig } from "swr";
 import BaseTable, { RegistryInfo } from "@/components/partials/table/BaseTable";
-import { CONTAINER_STATUS, toFormatContainer } from "@/helpers/helper";
+import {
+  CONTAINER_STATUS,
+  ENDPOINTS,
+  ENDPOINTS_KEYS,
+  toFormatContainer,
+} from "@/helpers/helper";
 import Card from "../Card";
 import Tooltip from "../Tooltip";
 import SkeletionTable from "@/components/skeleton/Table";
@@ -24,6 +29,8 @@ import StatusBar from "../StatusBar";
 import { FilterBadge } from "@/components/partials/table/FilterBadge";
 import ImageModal from "../ImageModal";
 import CountrySelect from "../Selects/CountrySelect";
+import { useSystemData } from "@/context/AuthProvider";
+import DetailsModal from "../DetailsModal";
 
 const StatusModal = ({ data, mutation }) => {
   const { isMutating, trigger } = useSWRPut(`/containers/${data.id}`);
@@ -50,6 +57,7 @@ const StatusModal = ({ data, mutation }) => {
 
 const InscriptionTable = ({ data, mutation, isValidating }) => {
   const { operatorId, hasRoleAccess } = useAuth();
+
   const { mutate: mutateSelect } = useSWRConfig();
   const [status, setStatus] = useState({ open: false, screenshot: null });
 
@@ -75,6 +83,21 @@ const InscriptionTable = ({ data, mutation, isValidating }) => {
           return (
             <div className="flex space-x-3 rtl:space-x-reverse">
               <RegistryInfo data={row.original} />
+              <DetailsModal
+                title="Detalle"
+                data={row.original}
+                OpenButtonComponent={({ onClick }) => (
+                  <Tooltip content="Ver" placement="top" arrow animation="fade">
+                    <button
+                      className="action-btn"
+                      type="submit"
+                      onClick={onClick}
+                    >
+                      <Icon icon="heroicons:eye" />
+                    </button>
+                  </Tooltip>
+                )}
+              />
               {row.original.status == CONTAINER_STATUS.TRAMITADO &&
                 hasRoleAccess("inscription", "edit") && (
                   <StatusModal data={row.original} mutation={mutation} />
@@ -216,8 +239,30 @@ const InscriptionTable = ({ data, mutation, isValidating }) => {
   );
 };
 
+const schema1 = yup
+  .object({
+    containerId: yup.string().required("Contenedor requerido"),
+    plateNumber: yup.string().required("Patente requerida"),
+    micdta: yup.string().required("MIC/DTA requerido"),
+    seal: yup.string().required("Sello requerido"),
+  })
+  .required();
+
+const schema2 = yup
+  .object({
+    containerId: yup.string().required("Contenedor requerido"),
+    plateNumber: yup.string().required("Patente requerida"),
+    micdta: yup.string().required("MIC/DTA requerido"),
+    seal: yup.string().required("Sello requerido"),
+    sealLine: yup.string().required("Sello linea requerido"),
+    plateNumberCountry: yup.string().required("País requerido"),
+  })
+  .required();
+
 const Inscription = () => {
   const { userId, operatorId, hasRoleAccess } = useAuth();
+  const [schema, setSchema] = useState(null);
+  const { user } = useSystemData();
   const [values, setValues] = useState([]);
   const ref = useRef(null);
 
@@ -231,16 +276,6 @@ const Inscription = () => {
   } = useSWRGet(`/inscriptions/user/${userId}`);
 
   const { trigger } = useSWRPost(`/inscriptions`);
-
-  const schema = yup
-    .object({
-      containerId: yup.string().required("Contenedor requerido"),
-      plateNumber: yup.string().required("Patente requerida"),
-      micdta: yup.string().required("MIC/DTA requerido"),
-      seal: yup.string().required("Sello requerido"),
-      plateNumberCountry: yup.string().required("País requerido"),
-    })
-    .required();
 
   const {
     register,
@@ -262,6 +297,20 @@ const Inscription = () => {
   useEffect(() => {
     if (!watch("containerId")) reset();
   }, [watch("containerId")]);
+
+  useEffect(() => {
+    if (selectedContainer != null) {
+      switch (selectedContainer.endpoint) {
+        case ENDPOINTS_KEYS.pc:
+        case ENDPOINTS_KEYS.sti:
+          setSchema(schema1);
+          break;
+        case ENDPOINTS_KEYS.silogport_tps:
+          setSchema(schema2);
+          break;
+      }
+    }
+  }, [selectedContainer]);
 
   return (
     <div className="grid 2xl:grid-cols-3 grid-cols-1 2xl:gap-x-5 gap-y-5">
@@ -335,9 +384,29 @@ const Inscription = () => {
                     <span>{selectedContainer.serviceOrder.booking}</span>
                   </div>
                 </div>
-
+                <div className="grid grid-cols-1 gap-5 mb-3 text-sm">
+                  <div className="flex justify-between items-center">
+                    <div className="capitalize font-semibold">Destino</div>
+                    <span>{ENDPOINTS[selectedContainer.endpoint]}</span>
+                  </div>
+                </div>
                 <hr />
 
+                <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-5 mb-3 text-sm">
+                  <div className="flex justify-between items-center">
+                    <div className="capitalize font-semibold">Chofer</div>
+                    <span>{user.name}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div className="capitalize font-semibold">DNI / RUT</div>
+                    <span>{user.dni}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div className="capitalize font-semibold">País Chofer</div>
+                    <span>{user.country}</span>
+                  </div>
+                </div>
+                <hr />
                 <Textinput
                   name="plateNumber"
                   label="Patente"
@@ -347,41 +416,75 @@ const Inscription = () => {
                   error={errors?.plateNumber}
                 />
 
-                <Controller
-                  control={control}
-                  name="plateNumberCountry"
-                  render={({ field: { onChange } }) => (
-                    <div>
-                      <CountrySelect
-                        label={"País Patente"}
-                        onChange={onChange}
-                      />
-                      {errors.plateNumberCountry && (
-                        <div className={`mt-2 text-danger-500 block text-sm`}>
-                          {errors.plateNumberCountry.message}
+                {(ENDPOINTS_KEYS.sti == selectedContainer.endpoint ||
+                  ENDPOINTS_KEYS.pc == selectedContainer.endpoint) && (
+                  <>
+                    <Textinput
+                      name="micdta"
+                      label="MIC/DTA de USPALLATA"
+                      placeholder="MIC/DTA de USPALLATA"
+                      type="text"
+                      register={register}
+                      error={errors?.micdta}
+                    />
+                    <Textinput
+                      name="seal"
+                      label="Sello Aduana Argentina"
+                      placeholder="Sello Aduana Argentina"
+                      type="text"
+                      register={register}
+                      error={errors?.seal}
+                    />
+                  </>
+                )}
+
+                {ENDPOINTS_KEYS.silogport_tps == selectedContainer.endpoint && (
+                  <>
+                    <Controller
+                      control={control}
+                      name="plateNumberCountry"
+                      render={({ field: { onChange } }) => (
+                        <div>
+                          <CountrySelect
+                            label={"País Patente"}
+                            onChange={onChange}
+                          />
+                          {errors.plateNumberCountry && (
+                            <div
+                              className={`mt-2 text-danger-500 block text-sm`}
+                            >
+                              {errors.plateNumberCountry.message}
+                            </div>
+                          )}
                         </div>
                       )}
-                    </div>
-                  )}
-                />
-
-                <Textinput
-                  name="micdta"
-                  label="MIC/DTA de USPALLATA"
-                  placeholder="MIC/DTA de USPALLATA"
-                  type="text"
-                  register={register}
-                  error={errors?.micdta}
-                />
-
-                <Textinput
-                  name="seal"
-                  label="Sello Aduana Argentina"
-                  placeholder="Sello Aduana Argentina"
-                  type="text"
-                  register={register}
-                  error={errors?.seal}
-                />
+                    />
+                    <Textinput
+                      name="micdta"
+                      label="MIC/DTA Electrónico"
+                      placeholder="MIC/DTA Electrónico"
+                      type="text"
+                      register={register}
+                      error={errors?.micdta}
+                    />
+                    <Textinput
+                      name="seal"
+                      label="Sello Aduana Argentina"
+                      placeholder="Sello Aduana Argentina"
+                      type="text"
+                      register={register}
+                      error={errors?.seal}
+                    />
+                    <Textinput
+                      name="sealLine"
+                      label="Sello Línea"
+                      placeholder="Sello Linea"
+                      type="text"
+                      register={register}
+                      error={errors?.sealLine}
+                    />
+                  </>
+                )}
               </>
             )}
           </div>

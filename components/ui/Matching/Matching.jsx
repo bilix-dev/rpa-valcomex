@@ -20,6 +20,7 @@ import CellMatch from "../CellMatch";
 import StatusBar from "../StatusBar";
 import { FilterBadge } from "@/components/partials/table/FilterBadge";
 import ImageModal from "../ImageModal";
+import DetailsModal from "../DetailsModal";
 
 const PendingTable = ({ data, mutation, isValidating }) => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -67,6 +68,32 @@ const PendingTable = ({ data, mutation, isValidating }) => {
             )}
           </div>
         ),
+      },
+      {
+        Header: "Opciones",
+        accessor: "action",
+        disableSortBy: true,
+        Cell: ({ row }) => {
+          return (
+            <div className="flex space-x-3 rtl:space-x-reverse">
+              <DetailsModal
+                title="Detalle"
+                data={row.original}
+                OpenButtonComponent={({ onClick }) => (
+                  <Tooltip content="Ver" placement="top" arrow animation="fade">
+                    <button
+                      className="action-btn"
+                      type="submit"
+                      onClick={onClick}
+                    >
+                      <Icon icon="heroicons:eye" />
+                    </button>
+                  </Tooltip>
+                )}
+              />
+            </div>
+          );
+        },
       },
       {
         Header: "OS",
@@ -292,6 +319,21 @@ const ProcessTable = ({ data, mutation, info }) => {
 
           return (
             <div className="flex space-x-3 rtl:space-x-reverse">
+              <DetailsModal
+                title="Detalle"
+                data={row.original}
+                OpenButtonComponent={({ onClick }) => (
+                  <Tooltip content="Ver" placement="top" arrow animation="fade">
+                    <button
+                      className="action-btn"
+                      type="submit"
+                      onClick={onClick}
+                    >
+                      <Icon icon="heroicons:eye" />
+                    </button>
+                  </Tooltip>
+                )}
+              />
               {row.original.status == CONTAINER_STATUS.ESPERA &&
                 hasRoleAccess("matching", "edit") && (
                   <StatusModal data={row.original} mutation={mutation} />

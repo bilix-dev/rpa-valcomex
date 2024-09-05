@@ -267,7 +267,7 @@ ContainerMatch.belongsTo(User);
 //
 
 if (process.env.NODE_ENV == "development") {
-  connection.sync({ alter: true });
+  //connection.sync({ alter: true });
 }
 
 export {

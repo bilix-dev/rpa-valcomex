@@ -12,7 +12,6 @@ const initOperator = (sequelize, DataTypes) => {
       },
       name: { type: DataTypes.STRING, allowNull: false },
       rut: { type: DataTypes.STRING, allowNull: false },
-      tariffCode: { type: DataTypes.STRING },
       expiration: DataTypes.DATE,
       status: {
         type: DataTypes.BOOLEAN,

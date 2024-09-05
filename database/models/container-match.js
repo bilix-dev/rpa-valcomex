@@ -1,6 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import connection from "../connection";
-import { CONTAINER_STATUS } from "@/helpers/helper";
 
 const initContainerMatch = (sequelize, DataTypes) => {
   class ContainerMatch extends Model {}
@@ -22,6 +21,7 @@ const initContainerMatch = (sequelize, DataTypes) => {
       updatedBy: DataTypes.STRING,
       micdta: { type: DataTypes.STRING },
       seal: { type: DataTypes.STRING },
+      sealLine: { type: DataTypes.STRING },
     },
     {
       sequelize,

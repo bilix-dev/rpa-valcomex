@@ -20,6 +20,7 @@ import useAuth from "@/hooks/useAuth";
 import useSWRPut from "@/hooks/useSWRPut";
 import {
   CONTAINER_STATUS,
+  ENDPOINTS,
   ENDPOINTS_KEYS,
   toFormatContainer,
   toFormatDateTime,
@@ -34,6 +35,8 @@ import CellStatus from "../CellStatus";
 import CellMatch from "../CellMatch";
 import ImageModal from "../ImageModal";
 import ContainerTypeSelect from "../Selects/ContainerTypeSelect";
+import { formatRut } from "rutlib";
+import DetailsModal from "../DetailsModal";
 
 const VoidModal = ({ data, mutation }) => {
   const { isMutating, trigger } = useSWRPut(`/containers/${data.id}`);
@@ -86,10 +89,8 @@ const StatusModal = ({ data, mutation }) => {
 
 const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
   const { osId } = useParams();
-
   const [open, isOpen] = useState(false);
   const [schema, setSchema] = useState(yup.object({}));
-
   const { trigger } = data.id
     ? useSWRPut(`/containers/${data.id}`)
     : useSWRPost(`/containers`);
@@ -145,8 +146,10 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                 .required("Peso VGM requerido"),
               operation: yup.string().required("Código de operación requerido"),
               clientRut: yup.string().required("Rut cliente requerido"),
-              shippingCompany: yup.string().required("Razón social requerida"),
-              businessName: yup.string().required("Código naviera requerido"),
+              businessName: yup.string().required("Razón social requerida"),
+              shippingCompany: yup
+                .string()
+                .required("Código naviera requerido"),
             })
             .required()
         );
@@ -161,8 +164,25 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                 .validContainer(),
               endpoint: yup.string().required("Destino requerido"),
               ship: yup.string().required("Nave requerida"),
-              custom: yup.string().required("Aduana requerida"),
               containerType: yup.string().required("Tipo contenedor requerido"),
+              consignee: yup.string().required("Consignatario requerido"),
+              vgmWeight: yup
+                .number()
+                .typeError("Peso VGM requerido")
+                .required("Peso VGM requerido"),
+              vgmWeightVerifier: yup
+                .number()
+                .required("Peso VGM verifier requerido")
+                .required("Peso VGM verifier requerido"),
+              weightChargeOnly: yup
+                .number()
+                .required("Peso (solo carga) requerido")
+                .required("Peso (solo carga)"),
+              isoCode: yup.string().required("ISO code requerido"),
+              numCartaPorte: yup
+                .string()
+                .required("Nº de carta de porte requerido"),
+              clientRut: yup.string().required("Rut requerido"),
             })
             .required()
         );
@@ -239,18 +259,6 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                 );
               }}
             />
-            {/* 
-            <Controller
-              control={control}
-              name="size"
-              render={({ field: { value, onChange } }) => (
-                <SizeSelect
-                  onChange={onChange}
-                  error={errors?.size}
-                  defaultValue={value}
-                />
-              )}
-            /> */}
 
             <Controller
               control={control}
@@ -309,13 +317,90 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                   />
 
                   <Textinput
-                    name="custom"
-                    label="Aduana"
-                    placeholder="Aduana"
+                    name="numCartaPorte"
+                    label="Nº de Carta de Porte"
+                    placeholder="Nº de Carta de Porte"
                     type="text"
                     register={register}
-                    error={errors?.custom}
+                    error={errors?.numCartaPorte}
                   />
+                  <Textinput
+                    name="isoCode"
+                    label="ISO Code"
+                    placeholder="ISO Code"
+                    type="text"
+                    register={register}
+                    error={errors?.isoCode}
+                  />
+                  <Textinput
+                    name="consignee"
+                    label="Consignatario"
+                    placeholder="Consignatario"
+                    type="text"
+                    register={register}
+                    error={errors?.consignee}
+                  />
+                  <Textinput
+                    name="vgmWeight"
+                    label="Peso VGM"
+                    placeholder="Peso VGM"
+                    type="number"
+                    register={register}
+                    error={errors?.vgmWeight}
+                  />
+                  <Textinput
+                    name="vgmWeightVerifier"
+                    label="Peso VGM Verifier"
+                    placeholder="Peso VGM Verifier"
+                    type="number"
+                    register={register}
+                    error={errors?.vgmWeightVerifier}
+                  />
+                  <Textinput
+                    name="weightChargeOnly"
+                    label="Peso (Solo Carga)"
+                    placeholder="Peso (Solo Carga)"
+                    type="number"
+                    register={register}
+                    error={errors?.weightChargeOnly}
+                  />
+                  <div className="fromGroup">
+                    <label className={`form-label block capitalize mb-2`}>
+                      Rut
+                    </label>
+                    <Controller
+                      control={control}
+                      name={"clientRut"}
+                      render={({ field: { value, onChange } }) => {
+                        return (
+                          <>
+                            <Cleave
+                              placeholder="Rut"
+                              value={value}
+                              onChange={(e) => onChange(e.target.rawValue)}
+                              options={{
+                                delimiters: [".", ".", "-"],
+                                blocks: [2, 3, 3, 1],
+                                uppercase: true,
+                              }}
+                              className={`form-control py-2 ${
+                                errors?.clientRut
+                                  ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
+                                  : ""
+                              } `}
+                            />
+                            {errors?.clientRut && (
+                              <div
+                                className={` mt-2 text-danger-500 block text-sm`}
+                              >
+                                {errors?.clientRut.message}
+                              </div>
+                            )}
+                          </>
+                        );
+                      }}
+                    />
+                  </div>
                 </>
               )}
 
@@ -491,6 +576,21 @@ const Container = () => {
           return (
             <div className="flex space-x-3 rtl:space-x-reverse">
               <RegistryInfo data={row.original} />
+              <DetailsModal
+                title="Detalle"
+                data={row.original}
+                OpenButtonComponent={({ onClick }) => (
+                  <Tooltip content="Ver" placement="top" arrow animation="fade">
+                    <button
+                      className="action-btn"
+                      type="submit"
+                      onClick={onClick}
+                    >
+                      <Icon icon="heroicons:eye" />
+                    </button>
+                  </Tooltip>
+                )}
+              />
               {row.original.status != CONTAINER_STATUS.ANULADO &&
                 hasRoleAccess("os", "edit") && (
                   <>
