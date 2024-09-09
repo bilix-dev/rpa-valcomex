@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import CellStatus from "./CellStatus";
 import { formatRut } from "rutlib";
 import Modal from "./Modal";
+import StatusBar from "./StatusBar";
 const DetailsModal = ({ OpenButtonComponent, title, data = {} }) => {
   const [open, isOpen] = useState(false);
 
@@ -57,6 +58,10 @@ const DetailsModal = ({ OpenButtonComponent, title, data = {} }) => {
           <div className="flex justify-between items-center">
             <div className="capitalize font-semibold">Estado</div>
             <CellStatus text={status} />
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="capitalize font-semibold">Flujo</div>
+            <StatusBar data={data} />
           </div>
         </div>
         {ENDPOINTS_KEYS.silogport_tps == data.endpoint && (
