@@ -10,7 +10,7 @@ export async function POST(request) {
 
   if (authorization == null)
     return NextResponse.json(
-      { error: "credenciales incorrectas" },
+      { error: "Credenciales incorrectas" },
       { status: 401 }
     );
 
@@ -34,9 +34,13 @@ export async function POST(request) {
 
   if (user == null) {
     return NextResponse.json(
-      { error: "credenciales incorrectas" },
+      { error: "Credenciales incorrectas" },
       { status: 401 }
     );
+  }
+
+  if (user.expires && new Date(user.expiration) < new Date()) {
+    return NextResponse.json({ error: "Usuario expirado" }, { status: 401 });
   }
 
   if (user.role.mobile == false) {
@@ -50,7 +54,7 @@ export async function POST(request) {
 
   if (!compare) {
     return NextResponse.json(
-      { error: "credenciales incorrectas" },
+      { error: "Credenciales incorrectas" },
       { status: 401 }
     );
   }
