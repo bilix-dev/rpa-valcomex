@@ -62,6 +62,11 @@ export default function DashboardRoot({ children }) {
       ? dayDiff <= process.env.NEXT_PUBLIC_EXPIRATION_DAYS_LIMIT
       : false
   );
+
+  const [profileShow, setProfileShow] = useState(
+    !(user.email && user.emailVerified)
+  );
+
   // header switch class
 
   const switchHeaderClass = () => {
@@ -192,6 +197,23 @@ export default function DashboardRoot({ children }) {
                         perfil
                       </Link>
                       {` de usuario. ${passwordMessage(passwordDiff)}`}
+                    </Alert>
+                  )}
+                  {profileShow && (
+                    <Alert
+                      toggle={() => setProfileShow(!profileShow)}
+                      icon="akar-icons:triangle-alert"
+                      className="light-mode alert-danger mb-5"
+                    >
+                      {`No existe correo válido asociado a esta cuenta. Puede agregar un correo desde el `}
+
+                      <Link
+                        href="/profile"
+                        className="font-bold italic underline"
+                      >
+                        perfil
+                      </Link>
+                      {` de usuario y validarlo al cambiar la contraseña.`}
                     </Alert>
                   )}
 

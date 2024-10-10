@@ -30,7 +30,6 @@ const ForgotPassPage = () => {
   ]);
 
   if (isLoading) return <Loading />;
-
   return (
     <div className="loginwrapper">
       <div className="lg-inner-column">
@@ -62,9 +61,30 @@ const ForgotPassPage = () => {
               </div>
               {response.data.valid ? (
                 <>
+                  <div className="border border-gray-500/100 rounded  flex flex-col gap-5 p-3">
+                    <div>
+                      <label className={`block capitalize`}>Rol</label>
+                      <h6 className="mt-1 font-light">
+                        {response.data.user.role.name}
+                      </h6>
+                    </div>
+                    <div>
+                      <label className={`block capitalize`}>Email</label>
+                      <h6 className="mt-1 font-light">
+                        {response.data.user.email}
+                      </h6>
+                    </div>
+                    <div>
+                      <label className={`block capitalize`}>Usuario</label>
+                      <h6 className="mt-1 font-light">
+                        {response.data.user.userName}
+                      </h6>
+                    </div>
+                  </div>
                   <div className="font-normal text-base text-slate-500 dark:text-slate-400 text-center px-2 bg-slate-100 dark:bg-slate-600 rounded py-3 mb-4 mt-10">
                     La contraseña debe ser segura
                   </div>
+
                   <NewPassword identifier={identifier} token={token} />
                 </>
               ) : (

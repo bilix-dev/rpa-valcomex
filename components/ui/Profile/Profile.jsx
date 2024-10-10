@@ -112,7 +112,7 @@ const Profile = () => {
                 register={register}
               />
               <Textinput
-                disabled={true}
+                disabled={data?.emailVerified}
                 label="Correo Electrónico"
                 type="text"
                 placeholder="Correo Electrónico"

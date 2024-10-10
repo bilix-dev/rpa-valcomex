@@ -14,9 +14,6 @@ const CellMatch = ({ match }) => {
         <li>
           <div className="text-xs">{match.plateNumber}</div>
         </li>
-        <li>
-          <div className="text-xs">{toFormatDateTime(match.createdAt)}</div>
-        </li>
       </ol>
     )
   );

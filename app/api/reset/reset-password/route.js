@@ -15,8 +15,14 @@ export async function POST(request) {
     const expiration = new Date();
     addDays(expiration, process.env.PASSWORD_EXPIRATION_DAYS_LIMIT);
 
+    const user = await User.findByPk(identifier);
+
     await User.update(
-      { hashedPassword, expiration },
+      {
+        hashedPassword,
+        expiration,
+        emailVerified: user.email ? user.emailVerified ?? new Date() : null,
+      },
       { where: { id: identifier } }
     );
     //Borro el token de la BD para que sea invalidado

@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import LeftSide from "@/components/partials/LeftSide";
 
-const ChangePassword = ({ user, operator }) => {
+const ChangePassword = ({ user }) => {
   const [isDark] = useDarkMode();
   const [error, setError] = useState(false);
   const { trigger } = useSWRPut("/reset/reset-password");
@@ -59,6 +59,8 @@ const ChangePassword = ({ user, operator }) => {
     } else setError(!data.updated);
   };
 
+  console.log(user);
+
   return (
     <div className="loginwrapper">
       <div className="lg-inner-column">
@@ -96,16 +98,16 @@ const ChangePassword = ({ user, operator }) => {
                 >
                   <div className="border border-gray-500/100 rounded  flex flex-col gap-5 p-3">
                     <div>
-                      <label className={`block capitalize`}>Operador</label>
-                      <h6 className="mt-1 font-light">{operator.name}</h6>
-                    </div>
-                    <div>
-                      <label className={`block capitalize`}>Usuario</label>
-                      <h6 className="mt-1 font-light">{user.name}</h6>
+                      <label className={`block capitalize`}>Rol</label>
+                      <h6 className="mt-1 font-light">{user.role.name}</h6>
                     </div>
                     <div>
                       <label className={`block capitalize`}>Email</label>
                       <h6 className="mt-1 font-light">{user.email}</h6>
+                    </div>
+                    <div>
+                      <label className={`block capitalize`}>Usuario</label>
+                      <h6 className="mt-1 font-light">{user.userName}</h6>
                     </div>
                   </div>
                   <Textinput

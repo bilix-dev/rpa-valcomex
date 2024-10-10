@@ -171,8 +171,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                 .typeError("Peso VGM requerido")
                 .required("Peso VGM requerido"),
               vgmWeightVerifier: yup
-                .number()
-                .required("Peso VGM verifier requerido")
+                .string()
                 .required("Peso VGM verifier requerido"),
               weightChargeOnly: yup
                 .number()
@@ -286,26 +285,13 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
               {/*Silogport_TPS*/}
               {watch("endpoint") == ENDPOINTS_KEYS.silogport_tps && (
                 <>
-                  <Controller
-                    control={control}
+                  <Textinput
                     name="containerType"
-                    render={({ field: { value, onChange } }) => (
-                      <div>
-                        <ContainerTypeSelect
-                          defaultValue={value}
-                          onChange={onChange}
-                          menuPortalTarget={document.body}
-                          styles={{
-                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          }}
-                        />
-                        {errors.containerType && (
-                          <div className={`mt-2 text-danger-500 block text-sm`}>
-                            {errors.containerType.message}
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    label="Tipo de Contenedor"
+                    placeholder="Tipo de Contenedor"
+                    type="text"
+                    register={register}
+                    error={errors?.containerType}
                   />
                   <Textinput
                     name="ship"
@@ -352,7 +338,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     name="vgmWeightVerifier"
                     label="Peso VGM Verifier"
                     placeholder="Peso VGM Verifier"
-                    type="number"
+                    type="text"
                     register={register}
                     error={errors?.vgmWeightVerifier}
                   />

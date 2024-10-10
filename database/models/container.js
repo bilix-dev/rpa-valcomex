@@ -40,9 +40,9 @@ const initContainer = (sequelize, DataTypes) => {
       ship: DataTypes.STRING,
 
       //data TPS
-      vgmWeightVerifier: DataTypes.DOUBLE,
+      vgmWeightVerifier: DataTypes.STRING,
       weightChargeOnly: DataTypes.DOUBLE,
-      isoCode: DataTypes.DOUBLE,
+      isoCode: DataTypes.STRING,
       numCartaPorte: DataTypes.STRING,
       consignee: DataTypes.STRING,
     },

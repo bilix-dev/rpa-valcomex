@@ -25,7 +25,13 @@ export async function POST(request) {
     const expiration = new Date();
     addDays(expiration, process.env.PASSWORD_EXPIRATION_DAYS_LIMIT);
 
-    await User.create({ ...rest, hashedPassword, expiration, status: true });
+    await User.create({
+      ...rest,
+      emailVerified: new Date(),
+      hashedPassword,
+      expiration,
+      status: true,
+    });
     await userCreation.destroy();
 
     return NextResponse.json({ message: "Usuario creado", updated: true });
