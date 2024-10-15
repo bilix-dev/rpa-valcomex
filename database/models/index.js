@@ -55,8 +55,13 @@ var User = connection.define(
     },
     createdBy: DataTypes.STRING,
     updatedBy: DataTypes.STRING,
+    foreign: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return this.country == null || this.country == "CHILE" ? false : true;
+      },
+    },
   },
-
   {
     defaultScope: {
       attributes: {

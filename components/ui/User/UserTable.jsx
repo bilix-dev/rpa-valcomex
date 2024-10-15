@@ -29,8 +29,8 @@ import {
 } from "@/helpers/helper";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import useAxios from "@/hooks/useAxios";
 import Checkbox from "../Checkbox";
+import CountrySelect from "../Selects/CountrySelect";
 
 const Avatar = ({
   name,
@@ -196,15 +196,6 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
           </div>
 
           <Textinput
-            label="Nombre"
-            name="name"
-            type="text"
-            placeholder="Nombre"
-            register={register}
-            error={errors?.name}
-          />
-
-          <Textinput
             disabled
             name="email"
             label="Correo electrónico"
@@ -214,11 +205,37 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
             error={errors?.email}
           />
 
-          <Checkbox
-            id={`expires`}
-            register={register(`expires`)}
-            label={<div className=" ml-2 capitalize">Contraseña Expirable</div>}
-            checked={watch(`expires`)}
+          <Textinput
+            label="Nombre"
+            name="name"
+            type="text"
+            placeholder="Nombre"
+            register={register}
+            error={errors?.name}
+          />
+
+          <Textinput
+            label="DNI"
+            type="text"
+            placeholder="DNI"
+            name={"dni"}
+            register={register}
+            error={errors?.dni}
+          />
+
+          <Controller
+            control={control}
+            name="country"
+            render={({ field: { value, onChange } }) => (
+              <div>
+                <CountrySelect defaultValue={value} onChange={onChange} />
+                {errors.country && (
+                  <div className={`mt-2 text-danger-500 block text-sm`}>
+                    {errors.country.message}
+                  </div>
+                )}
+              </div>
+            )}
           />
 
           <Controller
@@ -232,6 +249,13 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
                 onChange={onChange}
               />
             )}
+          />
+
+          <Checkbox
+            id={`expires`}
+            register={register(`expires`)}
+            label={<div className=" ml-2 capitalize">Contraseña Expirable</div>}
+            checked={watch(`expires`)}
           />
         </form>
       </Modal>
