@@ -36,12 +36,8 @@ async function Page() {
 
   const p_li = JSON.parse(JSON.stringify(li));
 
-  const test = await fetch(`http://sai.puertocolumbo.com:8080/XPS/login.jsp`);
-  const response = await test.text();
-
   return (
     <Dashboard
-      test={response}
       data={{
         lastInscriptions: p_li.map((x) => [
           toFormatContainer(x.container.name),
