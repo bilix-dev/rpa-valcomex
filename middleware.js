@@ -2,7 +2,6 @@ import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 import { GRANTS, dateDiff, hasAccess } from "./helpers/helper";
 import { menuItems } from "./constant/data";
-import { headers } from "next/headers";
 import * as jose from "jose";
 
 export default withAuth(

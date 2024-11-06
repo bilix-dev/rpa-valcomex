@@ -7,9 +7,11 @@ import Button from "../Button";
 import useAuth from "@/hooks/useAuth";
 import { useSystemData } from "@/context/AuthProvider";
 
-const Dashboard = ({ data }) => {
+const Dashboard = ({ test, data }) => {
   const { user } = useSystemData();
   const { hasRoleAccess } = useAuth();
+
+  console.log(test);
 
   const statistics = useMemo(
     () => [
