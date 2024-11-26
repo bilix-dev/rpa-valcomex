@@ -42,7 +42,6 @@ const initContainer = (sequelize, DataTypes) => {
       //data TPS
       vgmWeightVerifier: DataTypes.STRING,
       weightChargeOnly: DataTypes.DOUBLE,
-      isoCode: DataTypes.STRING,
       numCartaPorte: DataTypes.STRING,
       consignee: DataTypes.STRING,
     },

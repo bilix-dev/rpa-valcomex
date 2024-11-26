@@ -246,7 +246,8 @@ export async function sendDataAsync(container) {
         };
         break;
 
-      case ENDPOINTS_KEYS.silogport_tps:
+      case ENDPOINTS_KEYS.silogport:
+      case ENDPOINTS_KEYS.tps:
         payload = {
           ...payload,
           plateNumber: container.containerMatch.plateNumber,
@@ -256,11 +257,14 @@ export async function sendDataAsync(container) {
           ship: container.ship,
           custom: "VALCOMEX",
           containerType: container.containerType,
+          vgmWeight: container.vgmWeight,
           vgmWeightVerifier: container.vgmWeightVerifier,
           weightChargeOnly: container.weightChargeOnly,
-          isoCode: container.isoCode,
+          sealLine: container.containerMatch.sealLine,
           numCartaPorte: container.numCartaPorte,
           consignee: container.consignee,
+          choferName: container.containerMatch.user.name,
+          foreign: container.containerMatch.user.foreign,
         };
         break;
     }

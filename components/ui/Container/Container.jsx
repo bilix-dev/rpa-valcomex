@@ -177,11 +177,9 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                 .number()
                 .required("Peso (solo carga) requerido")
                 .required("Peso (solo carga)"),
-              isoCode: yup.string().required("ISO code requerido"),
               numCartaPorte: yup
                 .string()
                 .required("Nº de carta de porte requerido"),
-              clientRut: yup.string().required("Rut requerido"),
             })
             .required()
         );
@@ -311,14 +309,6 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     error={errors?.numCartaPorte}
                   />
                   <Textinput
-                    name="isoCode"
-                    label="ISO Code"
-                    placeholder="ISO Code"
-                    type="text"
-                    register={register}
-                    error={errors?.isoCode}
-                  />
-                  <Textinput
                     name="consignee"
                     label="Consignatario"
                     placeholder="Consignatario"
@@ -350,43 +340,6 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     register={register}
                     error={errors?.weightChargeOnly}
                   />
-                  <div className="fromGroup">
-                    <label className={`form-label block capitalize mb-2`}>
-                      Rut
-                    </label>
-                    <Controller
-                      control={control}
-                      name={"clientRut"}
-                      render={({ field: { value, onChange } }) => {
-                        return (
-                          <>
-                            <Cleave
-                              placeholder="Rut"
-                              value={value}
-                              onChange={(e) => onChange(e.target.rawValue)}
-                              options={{
-                                delimiters: [".", ".", "-"],
-                                blocks: [2, 3, 3, 1],
-                                uppercase: true,
-                              }}
-                              className={`form-control py-2 ${
-                                errors?.clientRut
-                                  ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
-                                  : ""
-                              } `}
-                            />
-                            {errors?.clientRut && (
-                              <div
-                                className={` mt-2 text-danger-500 block text-sm`}
-                              >
-                                {errors?.clientRut.message}
-                              </div>
-                            )}
-                          </>
-                        );
-                      }}
-                    />
-                  </div>
                 </>
               )}
 

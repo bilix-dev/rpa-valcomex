@@ -83,10 +83,6 @@ const DetailsModal = ({ OpenButtonComponent, title, data = {} }) => {
                 <span>{data.numCartaPorte}</span>
               </div>
               <div className="flex justify-between items-center">
-                <div className="capitalize font-semibold">ISO Code</div>
-                <span>{data.isoCode}</span>
-              </div>
-              <div className="flex justify-between items-center">
                 <div className="capitalize font-semibold">Consignatario</div>
                 <span>{data.consignee}</span>
               </div>
@@ -105,10 +101,6 @@ const DetailsModal = ({ OpenButtonComponent, title, data = {} }) => {
                   Peso (Solo Carga)
                 </div>
                 <span>{data.weightChargeOnly}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="capitalize font-semibold">Rut</div>
-                <span>{data.clientRut ? formatRut(data.clientRut) : null}</span>
               </div>
             </div>
           </>

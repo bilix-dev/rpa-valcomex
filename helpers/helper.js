@@ -309,11 +309,7 @@ export const EXCEL_DICTIONARY = {
     format: (value) => value,
   },
   RUT: {
-    valid_endpoints: [
-      ENDPOINTS_KEYS.pc,
-      ENDPOINTS_KEYS.sti,
-      ENDPOINTS_KEYS.silogport_tps,
-    ],
+    valid_endpoints: [ENDPOINTS_KEYS.pc, ENDPOINTS_KEYS.sti],
     key: "clientRut",
     value: "Texto",
     type: "CNT",
@@ -369,15 +365,6 @@ export const EXCEL_DICTIONARY = {
   TIPO_DE_BULTO: {
     valid_endpoints: [ENDPOINTS_KEYS.silogport_tps],
     key: "containerType",
-    value: "Texto",
-    type: "CNT",
-    required: true,
-    test: (value) => true,
-    format: (value) => value,
-  },
-  ISO_CODE: {
-    valid_endpoints: [ENDPOINTS_KEYS.silogport_tps],
-    key: "isoCode",
     value: "Texto",
     type: "CNT",
     required: true,
