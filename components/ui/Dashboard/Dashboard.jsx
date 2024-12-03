@@ -50,14 +50,6 @@ const Dashboard = ({ data }) => {
 
   return (
     <div className="grid gap-5">
-      <button
-        onClick={async () => {
-          const response = await fetcher.get("/test");
-          console.log(response?.data);
-        }}
-      >
-        TEST
-      </button>
       <div
         className={`bg-primary-500 rounded-md p-4 bg-opacity-[0.15] dark:bg-opacity-50 text-center`}
       >
