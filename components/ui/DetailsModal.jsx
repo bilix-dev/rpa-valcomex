@@ -15,7 +15,7 @@ const DetailsModal = ({ OpenButtonComponent, title, data = {} }) => {
 
   let status = data.status;
   const isAnyError = data.containerEndpoints.some((x) => x.error);
-  if (isAnyError) {
+  if (isAnyError && status != CONTAINER_STATUS.ANULADO) {
     status = CONTAINER_STATUS.ERROR;
   }
 

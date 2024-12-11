@@ -141,7 +141,11 @@ const SearchModal = () => {
                               const isAnyError = item.containerEndpoints.some(
                                 (x) => x.error
                               );
-                              if (isAnyError) status = CONTAINER_STATUS.ERROR;
+                              if (
+                                isAnyError &&
+                                status != CONTAINER_STATUS.ANULADO
+                              )
+                                status = CONTAINER_STATUS.ERROR;
 
                               return (
                                 <div

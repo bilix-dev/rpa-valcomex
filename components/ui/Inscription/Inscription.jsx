@@ -190,7 +190,7 @@ const InscriptionTable = ({ data, mutation, isValidating }) => {
             (x) => x.error
           );
 
-          if (isAnyError) {
+          if (isAnyError && status != CONTAINER_STATUS.ANULADO) {
             status = CONTAINER_STATUS.ERROR;
           }
 

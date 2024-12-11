@@ -418,7 +418,7 @@ const ProcessTable = ({ data, mutation, info }) => {
             const isAnyError = row.original.containerEndpoints.some(
               (x) => x.error
             );
-            if (isAnyError) {
+            if (isAnyError && status != CONTAINER_STATUS.ANULADO) {
               status = CONTAINER_STATUS.ERROR;
             } else if (isAnyLoading) {
               status = CONTAINER_STATUS.PROCESANDO;
