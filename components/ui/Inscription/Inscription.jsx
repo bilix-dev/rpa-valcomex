@@ -99,12 +99,12 @@ const InscriptionTable = ({ data, mutation, isValidating }) => {
                 )}
               />
               {row.original.status == CONTAINER_STATUS.TRAMITADO &&
-                hasRoleAccess("inscription", "edit") && (
+                hasRoleAccess("inscriptions", "edit") && (
                   <StatusModal data={row.original} mutation={mutation} />
                 )}
 
               {row.original.status == CONTAINER_STATUS.MATCH &&
-                hasRoleAccess("inscription", "delete") && (
+                hasRoleAccess("inscriptions", "delete") && (
                   <DeleteModal
                     url={`/inscriptions/container/${row.original.id}`}
                     mutation={async () => {
