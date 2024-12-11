@@ -57,6 +57,7 @@ const RegForm = ({ token, identifier, data }) => {
 
   const {
     register,
+    control,
     formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm({
