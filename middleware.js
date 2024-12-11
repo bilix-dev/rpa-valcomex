@@ -20,6 +20,7 @@ export default withAuth(
         if (
           !(
             pathname.startsWith("/api/external") ||
+            pathname.startsWith("/api/helper") ||
             pathname.startsWith("/api/auth") ||
             pathname.startsWith("/api/register") ||
             pathname.startsWith("/api/reset") ||
