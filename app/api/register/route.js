@@ -30,6 +30,7 @@ export async function POST(request) {
       emailVerified: new Date(),
       hashedPassword,
       expiration,
+      expires: false,
       status: true,
     });
     await userCreation.destroy();
