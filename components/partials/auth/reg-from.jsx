@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button";
 import { signOut } from "next-auth/react";
 import Alert from "@/components/ui/Alert";
 import { getDefaultData } from "@/helpers/helper";
+import CountrySelect from "@/components/ui/Selects/CountrySelect";
 // import Checkbox from "@/components/ui/Checkbox";
 // import { useDispatch, useSelector } from "react-redux";
 // import { handleRegister } from "./store";
@@ -25,6 +26,7 @@ const RegForm = ({ token, identifier, data }) => {
     .object({
       name: yup.string().required("Nombre es requerido"),
       dni: yup.string().required("DNI es requerido"),
+      country: yup.string().required("País requerido"),
       userName: yup
         .string()
         .required("Usuario es requerido")
@@ -111,6 +113,22 @@ const RegForm = ({ token, identifier, data }) => {
         register={register}
         error={errors.dni}
       />
+
+      <Controller
+        control={control}
+        name="country"
+        render={({ field: { value, onChange } }) => (
+          <div>
+            <CountrySelect defaultValue={value} onChange={onChange} />
+            {errors.country && (
+              <div className={`mt-2 text-danger-500 block text-sm`}>
+                {errors.country.message}
+              </div>
+            )}
+          </div>
+        )}
+      />
+
       <hr />
       <Textinput
         name="userName"
