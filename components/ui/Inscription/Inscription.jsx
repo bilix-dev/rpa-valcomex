@@ -366,7 +366,7 @@ const Inscription = () => {
                   operatorId={operatorId}
                   defaultValue={value}
                   onChange={onChange}
-                  isDisabled={!hasRoleAccess("inscription", "edit")}
+                  isDisabled={!hasRoleAccess("inscriptions", "edit")}
                   isClearable
                   error={errors.containerId}
                 />
