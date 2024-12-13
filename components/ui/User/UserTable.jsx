@@ -35,11 +35,11 @@ import CountrySelect from "../Selects/CountrySelect";
 const Avatar = ({
   name,
   image,
-  className = "lg:h-8 lg:w-8 h-7 w-7 rounded-full",
+  className = "lg:h-8 lg:w-8 h-7 w-7 rounded-full ",
   fallBack = "/assets/images/all-img/user-default.png",
 }) => {
   return (
-    <div className="flex items-center gap-5">
+    <div className="flex flex-row items-center gap-5 min-w-max">
       <div className={className}>
         <Image
           src={image?.preview ?? fallBack}
@@ -622,6 +622,7 @@ const UserTable = ({ mutate, ...rest }) => {
       {
         Header: "Nombre",
         accessor: "name",
+
         Cell: ({ row }) => {
           const memoImage = useMemo(
             () => bufferToFile(row.original.image),
