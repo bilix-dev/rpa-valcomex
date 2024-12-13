@@ -225,82 +225,84 @@ const CrudModal = ({ OpenButtonComponent, title, data = {} }) => {
           {isLoading ? (
             <SkeletionTable count={10} />
           ) : (
-            <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
-              <thead className="bg-slate-200 dark:bg-slate-700">
-                <tr>
-                  {columns.map((column, i) => (
-                    <th key={i} scope="col" className=" table-th ">
-                      {column.checkbox ? (
-                        <Checkbox
-                          id={column.type}
-                          label={
-                            <div className=" ml-2 uppercase text-xs ">
-                              {column.label}
-                            </div>
-                          }
-                          onChange={HandleClickAll}
-                          checked={checkedList
-                            .filter((x) => x.type == column.type)
-                            .every((x) => x.checked)}
-                        />
-                      ) : (
-                        column.label
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                {fields.map((row, i) => (
-                  <tr key={row.id}>
-                    <td className="table-td">{row.type}</td>
-                    <td className="table-td">{row.name}</td>
-                    <td className="table-td">
-                      {
-                        <Checkbox
-                          register={register(`grants.[${i}].view`)}
-                          id={`view.${row.grantId}`}
-                          checked={
-                            checkedList.find(
-                              (x) => x.id == `view.${row.grantId}`
-                            )?.checked
-                          }
-                          onChange={HandleClick}
-                        />
-                      }
-                    </td>
-                    <td className="table-td">
-                      {
-                        <Checkbox
-                          register={register(`grants.[${i}].edit`)}
-                          id={`edit.${row.grantId}`}
-                          checked={
-                            checkedList.find(
-                              (x) => x.id == `edit.${row.grantId}`
-                            )?.checked
-                          }
-                          onChange={HandleClick}
-                        />
-                      }
-                    </td>
-                    <td className="table-td">
-                      {
-                        <Checkbox
-                          register={register(`grants.[${i}].delete`)}
-                          id={`delete.${row.grantId}`}
-                          checked={
-                            checkedList.find(
-                              (x) => x.id == `delete.${row.grantId}`
-                            )?.checked
-                          }
-                          onChange={HandleClick}
-                        />
-                      }
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700 overflow-x-auto">
+                <thead className="bg-slate-200 dark:bg-slate-700">
+                  <tr>
+                    {columns.map((column, i) => (
+                      <th key={i} scope="col" className=" table-th ">
+                        {column.checkbox ? (
+                          <Checkbox
+                            id={column.type}
+                            label={
+                              <div className=" ml-2 uppercase text-xs ">
+                                {column.label}
+                              </div>
+                            }
+                            onChange={HandleClickAll}
+                            checked={checkedList
+                              .filter((x) => x.type == column.type)
+                              .every((x) => x.checked)}
+                          />
+                        ) : (
+                          column.label
+                        )}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
+                  {fields.map((row, i) => (
+                    <tr key={row.id}>
+                      <td className="table-td">{row.type}</td>
+                      <td className="table-td">{row.name}</td>
+                      <td className="table-td">
+                        {
+                          <Checkbox
+                            register={register(`grants.[${i}].view`)}
+                            id={`view.${row.grantId}`}
+                            checked={
+                              checkedList.find(
+                                (x) => x.id == `view.${row.grantId}`
+                              )?.checked
+                            }
+                            onChange={HandleClick}
+                          />
+                        }
+                      </td>
+                      <td className="table-td">
+                        {
+                          <Checkbox
+                            register={register(`grants.[${i}].edit`)}
+                            id={`edit.${row.grantId}`}
+                            checked={
+                              checkedList.find(
+                                (x) => x.id == `edit.${row.grantId}`
+                              )?.checked
+                            }
+                            onChange={HandleClick}
+                          />
+                        }
+                      </td>
+                      <td className="table-td">
+                        {
+                          <Checkbox
+                            register={register(`grants.[${i}].delete`)}
+                            id={`delete.${row.grantId}`}
+                            checked={
+                              checkedList.find(
+                                (x) => x.id == `delete.${row.grantId}`
+                              )?.checked
+                            }
+                            onChange={HandleClick}
+                          />
+                        }
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </form>
       </Modal>

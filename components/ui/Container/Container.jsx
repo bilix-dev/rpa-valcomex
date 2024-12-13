@@ -100,6 +100,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
     control,
     watch,
     register,
+    setValue,
     formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm({
@@ -290,6 +291,12 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="text"
                     register={register}
                     error={errors?.containerType}
+                    onBlur={(e) =>
+                      setValue(
+                        "containerType",
+                        e.target.value.toUpperCase().trim()
+                      )
+                    }
                   />
                   <Textinput
                     name="ship"
@@ -298,6 +305,9 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="text"
                     register={register}
                     error={errors?.ship}
+                    onBlur={(e) =>
+                      setValue("ship", e.target.value.toUpperCase().trim())
+                    }
                   />
 
                   <Textinput
@@ -307,6 +317,12 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="text"
                     register={register}
                     error={errors?.numCartaPorte}
+                    onBlur={(e) =>
+                      setValue(
+                        "numCartaPorte",
+                        e.target.value.toUpperCase().trim()
+                      )
+                    }
                   />
                   <Textinput
                     name="consignee"
@@ -315,6 +331,9 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="text"
                     register={register}
                     error={errors?.consignee}
+                    onBlur={(e) =>
+                      setValue("consignee", e.target.value.toUpperCase().trim())
+                    }
                   />
                   <Textinput
                     name="vgmWeight"
@@ -323,6 +342,9 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="number"
                     register={register}
                     error={errors?.vgmWeight}
+                    onBlur={(e) =>
+                      setValue("vgmWeight", e.target.value.toUpperCase().trim())
+                    }
                   />
                   <Textinput
                     name="vgmWeightVerifier"
@@ -331,6 +353,12 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="text"
                     register={register}
                     error={errors?.vgmWeightVerifier}
+                    onBlur={(e) =>
+                      setValue(
+                        "vgmWeightVerifier",
+                        e.target.value.toUpperCase().trim()
+                      )
+                    }
                   />
                   <Textinput
                     name="weightChargeOnly"
@@ -339,6 +367,12 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="number"
                     register={register}
                     error={errors?.weightChargeOnly}
+                    onBlur={(e) =>
+                      setValue(
+                        "weightChargeOnly",
+                        e.target.value.toUpperCase().trim()
+                      )
+                    }
                   />
                 </>
               )}
@@ -353,6 +387,9 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="text"
                     register={register}
                     error={errors?.operation}
+                    onBlur={(e) =>
+                      setValue("operation", e.target.value.toUpperCase().trim())
+                    }
                   />
                   <Textinput
                     name="shippingCompany"
@@ -361,6 +398,12 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="text"
                     register={register}
                     error={errors?.shippingCompany}
+                    onBlur={(e) =>
+                      setValue(
+                        "shippingCompany",
+                        e.target.value.toUpperCase().trim()
+                      )
+                    }
                   />
                   <Textinput
                     name="weight"
@@ -369,6 +412,9 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="number"
                     register={register}
                     error={errors?.weight}
+                    onBlur={(e) =>
+                      setValue("weight", e.target.value.toUpperCase().trim())
+                    }
                   />
                   <Textinput
                     name="vgmWeight"
@@ -377,6 +423,9 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="number"
                     register={register}
                     error={errors?.vgmWeight}
+                    onBlur={(e) =>
+                      setValue("vgmWeight", e.target.value.toUpperCase().trim())
+                    }
                   />
 
                   <Textinput
@@ -386,6 +435,12 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="text"
                     register={register}
                     error={errors?.businessName}
+                    onBlur={(e) =>
+                      setValue(
+                        "businessName",
+                        e.target.value.toUpperCase().trim()
+                      )
+                    }
                   />
 
                   <div className="fromGroup">
@@ -438,6 +493,9 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="number"
                     register={register}
                     error={errors?.weight}
+                    onBlur={(e) =>
+                      setValue("weight", e.target.value.toUpperCase().trim())
+                    }
                   />
                   <div className="fromGroup">
                     <label className={`form-label block capitalize mb-2`}>
@@ -483,6 +541,12 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
                     type="text"
                     register={register}
                     error={errors?.dispatcher}
+                    onBlur={(e) =>
+                      setValue(
+                        "dispatcher",
+                        e.target.value.toUpperCase().trim()
+                      )
+                    }
                   />
                 </>
               )}

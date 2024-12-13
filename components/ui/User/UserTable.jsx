@@ -114,6 +114,7 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
       userName: yup
         .string()
         .required("Usuario requerido")
+        .noWhiteSpaces("Usuario no debe tener espacios en blanco")
         .test(
           "username-validation",
           "Usuario ya existe en el sistema",
@@ -247,8 +248,292 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
                 operatorId={operatorId}
                 defaultValue={value}
                 onChange={onChange}
+                menuPortalTarget={document.body}
+                styles={{
+                  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                }}
               />
             )}
+          />
+
+          <Checkbox
+            id={`expires`}
+            register={register(`expires`)}
+            label={<div className=" ml-2 capitalize">Contraseña Expirable</div>}
+            checked={watch(`expires`)}
+          />
+        </form>
+      </Modal>
+    </>
+  );
+};
+
+const PasswordModal = ({ OpenButtonComponent, title, data, mutate }) => {
+  const { operatorId } = useAuth();
+  const [open, isOpen] = useState(false);
+
+  const schema = yup
+    .object({
+      password: yup
+        .string()
+        .min(6, "La contraseña debe tener al menos 6 caracteres")
+        .required("Contraseña es requerida"),
+      // confirm password
+      confirmPassword: yup
+        .string()
+        .oneOf(
+          [yup.ref("password"), null],
+          "Las contraseñas deben ser iguales"
+        ),
+    })
+    .required();
+
+  const { trigger } = useSWRPut(`/users/${data.id}`);
+  const router = useRouter();
+  const {
+    register,
+    reset,
+    watch,
+    control,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  return (
+    <>
+      <OpenButtonComponent
+        onClick={() => {
+          reset({ ...data });
+          isOpen(true);
+        }}
+      />
+      <Modal
+        activeModal={open}
+        onClose={() => isOpen(false)}
+        title={title}
+        labelClass="btn-outline-dark"
+        uncontrol={false}
+        footerContent={
+          <Button
+            text="Guardar"
+            form="user-form"
+            type="submit"
+            className="btn-outline btn-dark"
+            isLoading={isSubmitting}
+          />
+        }
+      >
+        <form
+          noValidate
+          id="user-form"
+          className="space-y-4 "
+          onSubmit={handleSubmit(async (form) => {
+            await trigger({ ...form, operatorId });
+            await mutate();
+            router.refresh();
+            isOpen(false);
+          })}
+        >
+          <Textinput
+            name="password"
+            label="Contraseña"
+            type="password"
+            placeholder="Contraseña"
+            register={register}
+            error={errors.password}
+          />
+          <Textinput
+            name="confirmPassword"
+            label="Repita Contraseña"
+            type="password"
+            placeholder="Repita Contraseña"
+            register={register}
+            error={errors.confirmPassword}
+          />
+        </form>
+      </Modal>
+    </>
+  );
+};
+
+const CreateModal = ({ OpenButtonComponent, title, mutate }) => {
+  const { operatorId } = useAuth();
+  const [open, isOpen] = useState(false);
+
+  const schema = yup
+    .object({
+      userName: yup
+        .string()
+        .noWhiteSpaces("Usuario no debe tener espacios en blanco")
+        .required("Usuario requerido")
+        .test(
+          "username-validation",
+          "Usuario ya existe en el sistema",
+          async (search) => {
+            const response = await getDefaultData(
+              `helper/users?search=${search}`
+            )();
+            return response.data;
+          }
+        ),
+      email: yup.string().email("Correo inválido").required("Correo requerido"),
+      name: yup.string().required("Nombre requerido"),
+      roleId: yup.string().required("Rol requerido"),
+      password: yup
+        .string()
+        .min(6, "La contraseña debe tener al menos 6 caracteres")
+        .required("Contraseña es requerida"),
+      // confirm password
+      confirmPassword: yup
+        .string()
+        .oneOf(
+          [yup.ref("password"), null],
+          "Las contraseñas deben ser iguales"
+        ),
+    })
+    .required();
+
+  const { trigger } = useSWRPost(`/users`);
+  const router = useRouter();
+  const {
+    register,
+    reset,
+    watch,
+    control,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  return (
+    <>
+      <OpenButtonComponent
+        onClick={() => {
+          reset();
+          isOpen(true);
+        }}
+      />
+      <Modal
+        activeModal={open}
+        onClose={() => isOpen(false)}
+        title={title}
+        labelClass="btn-outline-dark"
+        uncontrol={false}
+        footerContent={
+          <Button
+            text="Guardar"
+            form="user-form"
+            type="submit"
+            className="btn-outline btn-dark"
+            isLoading={isSubmitting}
+          />
+        }
+      >
+        <form
+          noValidate
+          id="user-form"
+          className="space-y-4 "
+          onSubmit={handleSubmit(async (form) => {
+            await trigger({ ...form, operatorId });
+            await mutate();
+            router.refresh();
+            isOpen(false);
+          })}
+        >
+          <Textinput
+            label="Usuario"
+            name="userName"
+            type="text"
+            placeholder="Usuario"
+            register={register}
+            error={errors?.userName}
+          />
+
+          <Textinput
+            name="email"
+            label="Correo electrónico"
+            placeholder="Correo electrónico"
+            type="email"
+            register={register}
+            error={errors?.email}
+          />
+
+          <Textinput
+            label="Nombre"
+            name="name"
+            type="text"
+            placeholder="Nombre"
+            register={register}
+            error={errors?.name}
+          />
+
+          <Textinput
+            label="DNI"
+            type="text"
+            placeholder="DNI"
+            name={"dni"}
+            register={register}
+            error={errors?.dni}
+          />
+
+          <Controller
+            control={control}
+            name="country"
+            render={({ field: { value, onChange } }) => (
+              <div>
+                <CountrySelect defaultValue={value} onChange={onChange} />
+                {errors.country && (
+                  <div className={`mt-2 text-danger-500 block text-sm`}>
+                    {errors.country.message}
+                  </div>
+                )}
+              </div>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="roleId"
+            render={({ field: { onChange, value } }) => (
+              <div>
+                <RoleSelect
+                  operatorId={operatorId}
+                  defaultValue={value}
+                  onChange={onChange}
+                  menuPortalTarget={document.body}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  }}
+                />
+                {errors.roleId && (
+                  <div className={`mt-2 text-danger-500 block text-sm`}>
+                    {errors.roleId.message}
+                  </div>
+                )}
+              </div>
+            )}
+          />
+
+          <hr />
+
+          <Textinput
+            name="password"
+            label="Contraseña"
+            type="password"
+            placeholder="Contraseña"
+            register={register}
+            error={errors.password}
+          />
+          <Textinput
+            name="confirmPassword"
+            label="Repita Contraseña"
+            type="password"
+            placeholder="Repita Contraseña"
+            register={register}
+            error={errors.confirmPassword}
           />
 
           <Checkbox
@@ -299,11 +584,33 @@ const UserTable = ({ mutate, ...rest }) => {
                       </Tooltip>
                     )}
                   />
-                  {!(row.original.role.super || userId == row.original.id) ?? (
+                  <PasswordModal
+                    data={row.original}
+                    mutate={mutate}
+                    title={"Cambiar Contraseña"}
+                    OpenButtonComponent={({ onClick }) => (
+                      <Tooltip
+                        content="Cambiar Contraseña"
+                        placement="top"
+                        arrow
+                        animation="fade"
+                      >
+                        <button
+                          className="action-btn btn-dark"
+                          type="submit"
+                          onClick={onClick}
+                        >
+                          <Icon icon="heroicons:pencil-square" />
+                        </button>
+                      </Tooltip>
+                    )}
+                  />
+                  {!(row.original.role.super || userId == row.original.id) && (
                     <StatusModal data={row.original} mutate={mutate} />
                   )}
                 </>
               )}
+
               {hasRoleAccess("users", "delete") &&
                 !(row.original.role.super || userId == row.original.id) && (
                   <DeleteModal data={row.original} mutate={mutate} />
@@ -389,7 +696,22 @@ const UserTable = ({ mutate, ...rest }) => {
     []
   );
 
-  return <BaseTable columns={columns} {...rest} />;
+  const actionMenu = useMemo(
+    () => (
+      <div>
+        {hasRoleAccess("users", "edit") && (
+          <CreateModal
+            title={"Crear"}
+            OpenButtonComponent={NewButton}
+            mutate={mutate}
+          />
+        )}
+      </div>
+    ),
+    []
+  );
+
+  return <BaseTable ActionComponent={actionMenu} columns={columns} {...rest} />;
 };
 
 export default UserTable;

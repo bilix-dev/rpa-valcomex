@@ -29,7 +29,7 @@ export const CustomTable = ({ headers, data }) => (
                   }
                   return (
                     <td key={i} className="table-td normal-case">
-                      {cell}
+                      {cell?.toString().toUpperCase().trim()}
                     </td>
                   );
                 })}

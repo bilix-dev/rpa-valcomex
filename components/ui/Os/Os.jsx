@@ -43,6 +43,7 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
   const {
     register,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm({
@@ -91,12 +92,18 @@ const CrudModal = ({ OpenButtonComponent, title, data = {}, mutation }) => {
             placeholder="Nombre"
             register={register}
             error={errors?.code}
+            onBlur={(e) =>
+              setValue("code", e.target.value.toUpperCase().trim())
+            }
           />
           <Textinput
             label="Booking"
             name="booking"
             type="text"
             placeholder="Booking"
+            onBlur={(e) =>
+              setValue("booking", e.target.value.toUpperCase().trim())
+            }
             register={register}
             error={errors?.booking}
           />

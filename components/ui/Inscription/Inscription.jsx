@@ -283,6 +283,7 @@ const Inscription = () => {
     clearErrors,
     watch,
     control,
+    setValue,
     formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm({
@@ -414,6 +415,9 @@ const Inscription = () => {
                   type="text"
                   register={register}
                   error={errors?.plateNumber}
+                  onBlur={(e) =>
+                    setValue("plateNumber", e.target.value.toUpperCase().trim())
+                  }
                 />
 
                 {(ENDPOINTS_KEYS.sti == selectedContainer.endpoint ||
@@ -426,6 +430,9 @@ const Inscription = () => {
                       type="text"
                       register={register}
                       error={errors?.micdta}
+                      onBlur={(e) =>
+                        setValue("micdta", e.target.value.toUpperCase().trim())
+                      }
                     />
                     <Textinput
                       name="seal"
@@ -434,6 +441,9 @@ const Inscription = () => {
                       type="text"
                       register={register}
                       error={errors?.seal}
+                      onBlur={(e) =>
+                        setValue("seal", e.target.value.toUpperCase().trim())
+                      }
                     />
                   </>
                 )}
@@ -466,6 +476,9 @@ const Inscription = () => {
                       type="text"
                       register={register}
                       error={errors?.micdta}
+                      onBlur={(e) =>
+                        setValue("micdta", e.target.value.toUpperCase().trim())
+                      }
                     />
                     <Textinput
                       name="seal"
@@ -474,6 +487,9 @@ const Inscription = () => {
                       type="text"
                       register={register}
                       error={errors?.seal}
+                      onBlur={(e) =>
+                        setValue("seal", e.target.value.toUpperCase().trim())
+                      }
                     />
                     <Textinput
                       name="sealLine"
@@ -482,6 +498,12 @@ const Inscription = () => {
                       type="text"
                       register={register}
                       error={errors?.sealLine}
+                      onBlur={(e) =>
+                        setValue(
+                          "sealLine",
+                          e.target.value.toUpperCase().trim()
+                        )
+                      }
                     />
                   </>
                 )}

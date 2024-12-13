@@ -150,7 +150,14 @@ const CrudModal = ({ OpenButtonComponent, title, mutate }) => {
             name="roleId"
             render={({ field: { onChange } }) => (
               <div>
-                <RoleSelect operatorId={operatorId} onChange={onChange} />
+                <RoleSelect
+                  operatorId={operatorId}
+                  onChange={onChange}
+                  menuPortalTarget={document.body}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  }}
+                />
                 {errors.roleId && (
                   <div className={`mt-2 text-danger-500 block text-sm`}>
                     {errors.roleId.message}

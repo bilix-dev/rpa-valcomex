@@ -45,8 +45,10 @@ export async function POST(request) {
               `[${ws.name},${index},${k}] - Campo erroneo: '${v}' `
             );
 
-          if (type == "OS") os_aux[key] = format(v.toString());
-          if (type == "CNT") cnt_aux[key] = format(v.toString());
+          if (type == "OS")
+            os_aux[key] = format(v?.toString().toUpperCase().trim());
+          if (type == "CNT")
+            cnt_aux[key] = format(v?.toString().toUpperCase().trim());
         }
 
         let os_found = await ServiceOrder.findOne({
