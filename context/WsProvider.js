@@ -26,9 +26,10 @@ export function WsProvider({ children }) {
 
 const Child = ({ status, children }) => {
   const [lastMessage, setLastMessage] = useState({});
-  useSubscription("/topic/notification", (message) =>
-    setLastMessage(JSON.parse(message.body))
-  );
+  useSubscription("/topic/notification", (message) => {
+    if (JSON.stringify(lastMessage) !== message.body)
+      setLastMessage(JSON.parse(message.body));
+  });
   return (
     <WsContext.Provider value={{ status, info: lastMessage }}>
       {children}

@@ -747,15 +747,17 @@ const Container = () => {
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mb-3 text-sm">
         <div className="flex justify-between items-center">
           <div className="form-label block capitalize font-semibold">OS</div>
-          <span>{response?.data.code}</span>
+          <span className="whitespace-nowrap">{response?.data.code}</span>
         </div>
         <div className="flex justify-between items-center">
           <div className="capitalize font-semibold">Booking</div>
-          <span>{response?.data.booking}</span>
+          <span className="whitespace-nowrap">{response?.data.booking}</span>
         </div>
         <div className="flex justify-between items-center">
           <div className="capitalize font-semibold">Creación</div>
-          <span>{toFormatDateTime(response?.data.createdAt)}</span>
+          <span className="whitespace-nowrap">
+            {toFormatDateTime(response?.data.createdAt)}
+          </span>
         </div>
       </div>
 
