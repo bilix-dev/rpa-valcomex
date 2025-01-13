@@ -117,7 +117,7 @@ export const Os = () => {
   const [params, setParams] = useState({
     pageIndex: 0,
     pageSize: 10,
-    sortBy: [],
+    sortBy: [{ id: "createdAt", desc: "true" }],
     filters: [],
   });
 
@@ -262,6 +262,14 @@ export const Os = () => {
       manualFilters={true}
       manualSortBy={true}
       ActionComponent={actionMenu}
+      initialState={{
+        sortBy: [
+          {
+            id: "createdAt",
+            desc: true,
+          },
+        ],
+      }}
     />
   );
 };

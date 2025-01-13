@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const { version } = require("./package.json");
+
 const nextConfig = {
   async redirects() {
     return [
@@ -13,6 +15,9 @@ const nextConfig = {
         permanent: true,
       },
     ];
+  },
+  env: {
+    version,
   },
   //output: "standalone",
 };

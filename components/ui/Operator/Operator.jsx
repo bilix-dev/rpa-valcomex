@@ -83,7 +83,16 @@ const Operator = () => {
               Operador actualizado correctamente.
             </Alert>
           )}
-          <div className="grid md:grid-cols-2 gap-5">
+          <div className="grid md:grid-cols-3 gap-5">
+            <Textinput
+              disabled
+              label="Nombre Operador"
+              type="text"
+              placeholder="Nombre operador"
+              name={"name"}
+              register={register}
+            />
+
             <div className="fromGroup">
               <label className={`form-label block capitalize mb-2`}>Rut</label>
               <Controller
@@ -120,12 +129,12 @@ const Operator = () => {
             </div>
 
             <Textinput
-              label="Nombre Operador"
+              disabled
+              label="Versión App Móvil"
               type="text"
               placeholder="Nombre operador"
-              name={"name"}
+              name={"appVersion"}
               register={register}
-              error={errors?.name}
             />
           </div>
           <label className={`form-label block capitalize`}>Rpas</label>

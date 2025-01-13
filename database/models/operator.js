@@ -13,6 +13,7 @@ const initOperator = (sequelize, DataTypes) => {
       name: { type: DataTypes.STRING, allowNull: false },
       rut: { type: DataTypes.STRING, allowNull: false },
       expiration: DataTypes.DATE,
+      appVersion: DataTypes.STRING,
       status: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
