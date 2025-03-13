@@ -39,11 +39,11 @@ export const CONTAINER_STATUS = Object.freeze({
 });
 
 export const ENDPOINTS = Object.freeze({
-  pc: "Puerto Central (San Antonio)",
+  pc: "DP WORLD (San Antonio)",
   sti: "STI (San Antonio)",
-  silogport: "Silogport (Valparaíso)",
+  silogport: "SILOGPORT (Valparaíso)",
   tps: "TPS (San Antonio)",
-  silogport_tps: "Silogport → TPS (Valparaíso)",
+  silogport_tps: "SILOGPORT → TPS (Valparaíso)",
 });
 
 export const SIZE = Object.freeze({
@@ -238,6 +238,19 @@ export const getDataFromWorksheetClient = (worksheet) => {
   });
   return { titles, data };
 };
+
+export const toClLocaleString = (date) =>
+  date
+    ?.toLocaleString("es-CL", {
+      timeZone: "America/Santiago",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+    .replace(",", "");
 
 export const dayMessage = (n) => {
   switch (n) {

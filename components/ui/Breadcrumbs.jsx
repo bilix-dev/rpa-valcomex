@@ -9,9 +9,19 @@ const Breadcrumbs = () => {
 
   const [isHide, setIsHide] = useState(null);
   const [groupTitle, setGroupTitle] = useState("");
+  const [prevTitle, setPrevTitle] = useState({ title: null, link: null });
   const [title, setTitle] = useState("");
 
   useEffect(() => {
+    //CASO ESPECIAL
+    const found = location?.match("os/[^/]+/containers");
+    if (found) {
+      setGroupTitle("Documentos");
+      setPrevTitle({ title: "Órdenes de Servicio", link: "/os" });
+      setTitle("Contenedores");
+      return;
+    }
+
     const currentMenuItem = menuItems.find((item) => item.link === location);
 
     const currentChild = menuItems.find((item) =>
@@ -45,7 +55,7 @@ const Breadcrumbs = () => {
               </span>
             </li>
             {groupTitle && (
-              <li className="text-primary-500">
+              <li className="text-slate-500">
                 <button type="button" className="capitalize">
                   {groupTitle}
                 </button>
@@ -54,6 +64,16 @@ const Breadcrumbs = () => {
                 </span>
               </li>
             )}
+
+            {prevTitle.title && (
+              <li className="text-primary-500">
+                <Link href={prevTitle.link}>{prevTitle.title}</Link>
+                <span className="breadcrumbs-icon rtl:transform rtl:rotate-180">
+                  <Icon icon="heroicons:chevron-right" />
+                </span>
+              </li>
+            )}
+
             <li className="capitalize text-slate-500 dark:text-slate-400">
               {title}
             </li>
