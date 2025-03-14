@@ -42,6 +42,7 @@ var User = connection.define(
       type: DataTypes.STRING,
     },
     country: { type: DataTypes.STRING },
+    phoneNumber: { type: DataTypes.STRING },
     status: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,

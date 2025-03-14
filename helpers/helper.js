@@ -31,7 +31,7 @@ export const CONTAINER_STATUS = Object.freeze({
   PENDIENTE: "pendiente",
   MATCH: "match",
   PROCESANDO: "procesando",
-  TRAMITADO: "tramitado",
+  VISADO: "visado",
   FINALIZADO: "finalizado",
   ANULADO: "anulado",
   ESPERA: "espera",
@@ -39,11 +39,11 @@ export const CONTAINER_STATUS = Object.freeze({
 });
 
 export const ENDPOINTS = Object.freeze({
-  pc: "DP WORLD (San Antonio)",
-  sti: "STI (San Antonio)",
-  silogport: "SILOGPORT (Valparaíso)",
-  tps: "TPS (San Antonio)",
-  silogport_tps: "SILOGPORT → TPS (Valparaíso)",
+  pc: "DP World (Puerto Central)",
+  sti: "STI",
+  silogport: "Silogport",
+  tps: "TPS",
+  silogport_tps: "Silogport → TPS",
 });
 
 export const SIZE = Object.freeze({
@@ -54,6 +54,23 @@ export const SIZE = Object.freeze({
 export const COUNTRY = Object.freeze({
   ARGENTINA: "ARGENTINA",
   CHILE: "CHILE",
+  VENEZUELA: "VENEZUELA",
+  BRASIL: "BRASIL",
+  PERU: "PERU",
+  COLOMBIA: "COLOMBIA",
+  ECUADOR: "ECUADOR",
+  URUGAY: "URUGAY",
+  PARAGUAY: "PARAGUAY",
+  BOLIVIA: "BOLIVIA",
+  PANAMA: "PANAMA",
+  COSTA_RICA: "COSTA RICA",
+  NICARAGUA: "NICARAGUA",
+  HONDURAS: "HONDURAS",
+  EL_SALVADOR: "EL SALVADOR",
+  GUATEMALA: "GUATEMALA",
+  MEXICO: "MEXICO",
+  ESTADOS_UNIDOS: "ESTADOS UNIDOS",
+  CANADA: "CANADA",
 });
 
 export const CONTAINER_TYPE = Object.freeze({

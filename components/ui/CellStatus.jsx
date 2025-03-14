@@ -14,7 +14,7 @@ const CellStatus = ({ text }) => {
     case CONTAINER_STATUS.PROCESANDO:
       color = "bg-info-500";
       break;
-    case CONTAINER_STATUS.TRAMITADO:
+    case CONTAINER_STATUS.VISADO:
       color = "bg-primary-500";
       break;
     case CONTAINER_STATUS.FINALIZADO:

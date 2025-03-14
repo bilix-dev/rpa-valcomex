@@ -11,6 +11,7 @@ import { signOut } from "next-auth/react";
 import Alert from "@/components/ui/Alert";
 import { getDefaultData } from "@/helpers/helper";
 import CountrySelect from "@/components/ui/Selects/CountrySelect";
+import Cleave from "cleave.js/react";
 // import Checkbox from "@/components/ui/Checkbox";
 // import { useDispatch, useSelector } from "react-redux";
 // import { handleRegister } from "./store";
@@ -27,6 +28,7 @@ const RegForm = ({ token, identifier, data }) => {
       name: yup.string().required("Nombre es requerido"),
       dni: yup.string().required("DNI es requerido"),
       country: yup.string().required("País requerido"),
+      phoneNumber: yup.string().notRequired().length(11, "Teléfono inválido"),
       userName: yup
         .string()
         .required("Usuario es requerido")
@@ -114,6 +116,46 @@ const RegForm = ({ token, identifier, data }) => {
         register={register}
         error={errors.dni}
       />
+
+      <div className="fromGroup">
+        <label className={`form-label block capitalize mb-2`}>Teléfono</label>
+        <Controller
+          control={control}
+          name={"phoneNumber"}
+          render={({ field: { value, onChange } }) => {
+            return (
+              <>
+                <Cleave
+                  placeholder="Teléfono"
+                  options={{
+                    numericOnly: true,
+                    blocks: [3, 3, 3, 2],
+                    delimiters: [" ", " ", " "],
+                  }}
+                  value={value}
+                  onChange={(e) =>
+                    onChange(
+                      e.target.rawValue.length > 0
+                        ? e.target.rawValue
+                        : undefined
+                    )
+                  }
+                  className={`form-control py-2 ${
+                    errors?.phoneNumber
+                      ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
+                      : ""
+                  } `}
+                />
+                {errors?.phoneNumber && (
+                  <div className={` mt-2 text-danger-500 block text-sm`}>
+                    {errors?.phoneNumber.message}
+                  </div>
+                )}
+              </>
+            );
+          }}
+        />
+      </div>
 
       <Controller
         control={control}

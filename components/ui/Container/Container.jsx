@@ -598,7 +598,7 @@ const Container = () => {
                 hasRoleAccess("os", "edit") && (
                   <>
                     {row.original.status != CONTAINER_STATUS.FINALIZADO &&
-                      row.original.status != CONTAINER_STATUS.TRAMITADO && (
+                      row.original.status != CONTAINER_STATUS.VISADO && (
                         <CrudModal
                           title="Editar"
                           data={row.original}
@@ -622,12 +622,12 @@ const Container = () => {
                         />
                       )}
 
-                    {row.original.status == CONTAINER_STATUS.TRAMITADO && (
+                    {row.original.status == CONTAINER_STATUS.VISADO && (
                       <StatusModal data={row.original} mutation={mutate} />
                     )}
 
                     {row.original.status != CONTAINER_STATUS.FINALIZADO &&
-                      row.original.status != CONTAINER_STATUS.TRAMITADO && (
+                      row.original.status != CONTAINER_STATUS.VISADO && (
                         <VoidModal data={row.original} mutation={mutate} />
                       )}
                   </>

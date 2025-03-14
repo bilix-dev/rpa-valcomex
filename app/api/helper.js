@@ -299,7 +299,7 @@ export async function sendDataAsync(container) {
 
   //Si avanza significa que todos se cumplieron, cambiar estado a contenedor
   await container.update({
-    status: CONTAINER_STATUS.TRAMITADO,
+    status: CONTAINER_STATUS.VISADO,
     processedDate: new Date(),
   });
 }

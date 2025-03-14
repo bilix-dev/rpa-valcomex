@@ -31,7 +31,7 @@ export async function PUT(request, { params }) {
   const containerId = params.containerId;
   const container = await Container.findByPk(containerId);
 
-  if (container.status != CONTAINER_STATUS.TRAMITADO)
+  if (container.status != CONTAINER_STATUS.VISADO)
     return NextResponse.json(
       { status: 1, error: "Contenedor no está en estado tramitado" },
       { status: 400 }

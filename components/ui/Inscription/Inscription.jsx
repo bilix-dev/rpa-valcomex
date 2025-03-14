@@ -64,7 +64,7 @@ const InscriptionTable = ({ data, mutation, isValidating }) => {
   const [filter, setFilter] = useState([
     { data: CONTAINER_STATUS.MATCH, status: true, color: "bg-violet-500" },
     { data: CONTAINER_STATUS.ESPERA, status: true, color: "bg-slate-500" },
-    { data: CONTAINER_STATUS.TRAMITADO, status: true, color: "bg-primary-500" },
+    { data: CONTAINER_STATUS.VISADO, status: true, color: "bg-primary-500" },
     {
       data: CONTAINER_STATUS.FINALIZADO,
       status: false,
@@ -98,7 +98,7 @@ const InscriptionTable = ({ data, mutation, isValidating }) => {
                   </Tooltip>
                 )}
               />
-              {row.original.status == CONTAINER_STATUS.TRAMITADO &&
+              {row.original.status == CONTAINER_STATUS.VISADO &&
                 hasRoleAccess("inscriptions", "edit") && (
                   <StatusModal data={row.original} mutation={mutation} />
                 )}

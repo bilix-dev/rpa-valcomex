@@ -36,7 +36,10 @@ export default withAuth(
 
       //Si es una api de aplicacion movil (si tiene o no token es lo mismo)
       if (pathname.startsWith("/api/mobile")) {
-        if (!pathname.startsWith("/api/mobile/auth")) {
+        if (
+          !pathname.startsWith("/api/mobile/auth") &&
+          !pathname.startsWith("/api/mobile/register")
+        ) {
           try {
             const requestHeaders = new Headers(req.headers);
             const authorization = requestHeaders.get("authorization");

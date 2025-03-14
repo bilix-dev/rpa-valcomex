@@ -278,7 +278,7 @@ const ProcessTable = ({ data, mutation, info }) => {
   const [status, setStatus] = useState({ open: false, screenshot: null });
   const [filter, setFilter] = useState([
     { data: CONTAINER_STATUS.ESPERA, status: true, color: "bg-slate-500" },
-    { data: CONTAINER_STATUS.TRAMITADO, status: true, color: "bg-primary-500" },
+    { data: CONTAINER_STATUS.VISADO, status: true, color: "bg-primary-500" },
   ]);
 
   const { hasRoleAccess } = useAuth();
@@ -289,7 +289,7 @@ const ProcessTable = ({ data, mutation, info }) => {
         ?.filter(
           (x) =>
             x.status == CONTAINER_STATUS.ESPERA ||
-            x.status == CONTAINER_STATUS.TRAMITADO ||
+            x.status == CONTAINER_STATUS.VISADO ||
             x.status == CONTAINER_STATUS.PROCESANDO
         )
         .filter((x) => filter?.find((y) => y.data == x.status)?.status) ?? [],

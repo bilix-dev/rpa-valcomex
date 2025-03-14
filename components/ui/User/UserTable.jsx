@@ -31,6 +31,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Checkbox from "../Checkbox";
 import CountrySelect from "../Selects/CountrySelect";
+import Cleave from "cleave.js/react";
 
 const Avatar = ({
   name,
@@ -128,6 +129,7 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
       email: yup.string().email("Correo inválido").required("Correo requerido"),
       name: yup.string().required("Nombre requerido"),
       roleId: yup.string().required("Rol requerido"),
+      phoneNumber: yup.string().notRequired().length(11, "Teléfono inválido"),
     })
     .required();
 
@@ -223,6 +225,48 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
             register={register}
             error={errors?.dni}
           />
+
+          <div className="fromGroup">
+            <label className={`form-label block capitalize mb-2`}>
+              Teléfono
+            </label>
+            <Controller
+              control={control}
+              name={"phoneNumber"}
+              render={({ field: { value, onChange } }) => {
+                return (
+                  <>
+                    <Cleave
+                      placeholder="Teléfono"
+                      options={{
+                        numericOnly: true,
+                        blocks: [3, 3, 3, 2],
+                        delimiters: [" ", " ", " "],
+                      }}
+                      value={value}
+                      onChange={(e) =>
+                        onChange(
+                          e.target.rawValue.length > 0
+                            ? e.target.rawValue
+                            : undefined
+                        )
+                      }
+                      className={`form-control py-2 ${
+                        errors?.phoneNumber
+                          ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
+                          : ""
+                      } `}
+                    />
+                    {errors?.phoneNumber && (
+                      <div className={` mt-2 text-danger-500 block text-sm`}>
+                        {errors?.phoneNumber.message}
+                      </div>
+                    )}
+                  </>
+                );
+              }}
+            />
+          </div>
 
           <Controller
             control={control}
@@ -381,6 +425,7 @@ const CreateModal = ({ OpenButtonComponent, title, mutate }) => {
       email: yup.string().email("Correo inválido").required("Correo requerido"),
       name: yup.string().required("Nombre requerido"),
       roleId: yup.string().required("Rol requerido"),
+      phoneNumber: yup.string().notRequired().length(11, "Teléfono inválido"),
       password: yup
         .string()
         .min(6, "La contraseña debe tener al menos 6 caracteres")
@@ -478,6 +523,47 @@ const CreateModal = ({ OpenButtonComponent, title, mutate }) => {
             register={register}
             error={errors?.dni}
           />
+          <div className="fromGroup">
+            <label className={`form-label block capitalize mb-2`}>
+              Teléfono
+            </label>
+            <Controller
+              control={control}
+              name={"phoneNumber"}
+              render={({ field: { value, onChange } }) => {
+                return (
+                  <>
+                    <Cleave
+                      placeholder="Teléfono"
+                      options={{
+                        numericOnly: true,
+                        blocks: [3, 3, 3, 2],
+                        delimiters: [" ", " ", " "],
+                      }}
+                      value={value}
+                      onChange={(e) =>
+                        onChange(
+                          e.target.rawValue.length > 0
+                            ? e.target.rawValue
+                            : undefined
+                        )
+                      }
+                      className={`form-control py-2 ${
+                        errors?.phoneNumber
+                          ? " border-danger-500 focus:ring-danger-500  focus:ring-opacity-90 focus:ring-1"
+                          : ""
+                      } `}
+                    />
+                    {errors?.phoneNumber && (
+                      <div className={` mt-2 text-danger-500 block text-sm`}>
+                        {errors?.phoneNumber.message}
+                      </div>
+                    )}
+                  </>
+                );
+              }}
+            />
+          </div>
 
           <Controller
             control={control}
@@ -640,6 +726,10 @@ const UserTable = ({ mutate, ...rest }) => {
       {
         Header: "Email",
         accessor: "email",
+      },
+      {
+        Header: "Teléfono",
+        accessor: "phoneNumber",
       },
       {
         Header: "Rol",

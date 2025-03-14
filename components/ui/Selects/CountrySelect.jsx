@@ -5,10 +5,12 @@ import { COUNTRY } from "@/helpers/helper";
 const CountrySelect = ({ ...rest }) => {
   const countries = useMemo(
     () =>
-      Object.entries(COUNTRY).map((x) => ({
-        label: x[1],
-        value: x[0],
-      })),
+      Object.entries(COUNTRY)
+        .map((x) => ({
+          label: x[1],
+          value: x[1],
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
     []
   );
 

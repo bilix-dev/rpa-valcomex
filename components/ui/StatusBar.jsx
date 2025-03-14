@@ -60,9 +60,9 @@ const StatusBar = ({ data }) => {
       next = CONTAINER_STATUS.ESPERA;
       break;
     case CONTAINER_STATUS.ESPERA:
-      next = CONTAINER_STATUS.TRAMITADO;
+      next = CONTAINER_STATUS.VISADO;
       break;
-    case CONTAINER_STATUS.TRAMITADO:
+    case CONTAINER_STATUS.VISADO:
       next = CONTAINER_STATUS.FINALIZADO;
       break;
     case CONTAINER_STATUS.FINALIZADO:
@@ -91,7 +91,7 @@ const StatusBar = ({ data }) => {
         date={data.waitingDate}
       />
       <IconBar
-        type={CONTAINER_STATUS.TRAMITADO}
+        type={CONTAINER_STATUS.VISADO}
         current={status}
         next={next}
         date={data.processedDate}
