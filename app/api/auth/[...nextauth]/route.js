@@ -80,6 +80,7 @@ export const authOptions = {
           userName,
           expiration,
           expires,
+          fullName,
           operatorId,
           role,
           status,
@@ -97,13 +98,14 @@ export const authOptions = {
           id,
           userName,
           operatorId,
+          fullName,
           role,
           user_expires: expires,
           expiration,
           valid: status && operator.status && !expired,
         };
       } else {
-        const { name, expires, expiration, role, status, operator } =
+        const { name, fullName, expires, expiration, role, status, operator } =
           await findLoggedUserByPk(
             trigger == "update" && session?.userId ? session.userId : token.id
           );
@@ -113,6 +115,7 @@ export const authOptions = {
         return {
           ...token,
           name,
+          fullName,
           expiration,
           user_expires: expires,
           role,
@@ -127,6 +130,7 @@ export const authOptions = {
           ...session.user,
           userName: token.userName,
           name: token.name,
+          fullName: token.fullName,
           email: token.email,
           id: token.id,
           user_expires: token.expires,

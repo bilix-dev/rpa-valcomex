@@ -41,6 +41,7 @@ var User = connection.define(
     dni: {
       type: DataTypes.STRING,
     },
+    lastName: { type: DataTypes.STRING },
     country: { type: DataTypes.STRING },
     phoneNumber: { type: DataTypes.STRING },
     status: {
@@ -56,6 +57,26 @@ var User = connection.define(
     },
     createdBy: DataTypes.STRING,
     updatedBy: DataTypes.STRING,
+    fullName: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        const name = this.name ?? " ";
+        const lastName = this.lastName ?? " ";
+        return (name + " " + lastName).trim();
+      },
+    },
+    normalizedName: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        const name = this.name ?? " ";
+        const lastName = this.lastName ?? " ";
+        const first = name.trim().split(" ");
+        const last = lastName.trim().split(" ");
+        return (first[0] + " " + last[0])
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+      },
+    },
     foreign: {
       type: DataTypes.VIRTUAL,
       get() {

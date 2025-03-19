@@ -74,7 +74,7 @@ const Profile = () => {
 
   return (
     <Dropdown
-      label={<ProfileLabel name={user.name} image={image} />}
+      label={<ProfileLabel name={user.fullName} image={image} />}
       classMenuItems="w-[180px] top-[58px]"
     >
       {ProfileMenu.map((item, index) => (

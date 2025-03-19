@@ -26,6 +26,7 @@ const RegForm = ({ token, identifier, data }) => {
   const schema = yup
     .object({
       name: yup.string().required("Nombre es requerido"),
+      lastName: yup.string().required("Apellido es requerido"),
       dni: yup.string().required("DNI es requerido"),
       country: yup.string().required("País requerido"),
       phoneNumber: yup.string().notRequired().length(11, "Teléfono inválido"),
@@ -107,6 +108,14 @@ const RegForm = ({ token, identifier, data }) => {
         placeholder="Nombre"
         register={register}
         error={errors.name}
+      />
+      <Textinput
+        label="Apellido"
+        type="text"
+        placeholder="Apellido"
+        name={"lastName"}
+        register={register}
+        error={errors?.lastName}
       />
       <Textinput
         name="dni"

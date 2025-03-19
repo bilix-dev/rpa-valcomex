@@ -49,6 +49,7 @@ const Profile = () => {
   const schema = yup
     .object({
       name: yup.string().required("Nombre requerido"),
+      lastName: yup.string().required("Apellido requerido"),
       dni: yup.string().required("DNI requerido"),
       country: yup.string().required("País requerido"),
       phoneNumber: yup.string().notRequired().length(11, "Teléfono inválido"),
@@ -133,6 +134,14 @@ const Profile = () => {
                 error={errors?.name}
               />
               <Textinput
+                label="Apellido"
+                type="text"
+                placeholder="Apellido"
+                name={"lastName"}
+                register={register}
+                error={errors?.lastName}
+              />
+              <Textinput
                 label="DNI"
                 type="text"
                 placeholder="DNI"
@@ -140,7 +149,6 @@ const Profile = () => {
                 register={register}
                 error={errors?.dni}
               />
-
               <div className="fromGroup">
                 <label className={`form-label block capitalize mb-2`}>
                   Teléfono

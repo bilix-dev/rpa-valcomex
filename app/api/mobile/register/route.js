@@ -10,27 +10,36 @@ export async function POST(request) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     if (password != confirmPassword) {
-      return NextResponse.json({
-        message: "Las contraseñas no coinciden",
-        created: false,
-      });
+      return NextResponse.json(
+        {
+          status: 1,
+          message: "Las contraseñas no coinciden",
+        },
+        { status: 400 }
+      );
     }
 
     const existUser = await User.findOne({ where: { userName } });
 
     if (existUser)
-      return NextResponse.json({
-        message: "El usuario ya existe",
-        created: false,
-      });
+      return NextResponse.json(
+        {
+          status: 1,
+          message: "El usuario ya existe",
+        },
+        { status: 400 }
+      );
 
     const existEmail = await User.findOne({ where: { email } });
 
     if (existEmail)
-      return NextResponse.json({
-        message: "El email ya existe",
-        created: false,
-      });
+      return NextResponse.json(
+        {
+          status: 1,
+          message: "El email ya existe",
+        },
+        { status: 400 }
+      );
 
     const expiration = new Date();
     addDays(expiration, process.env.PASSWORD_EXPIRATION_DAYS_LIMIT);
@@ -46,14 +55,19 @@ export async function POST(request) {
       status: true,
     });
 
-    return NextResponse.json({ message: "Usuario creado", created: true });
+    return NextResponse.json({
+      status: 0,
+      message: "Usuario creado",
+      created: true,
+    });
   } catch (error) {
-    return NextResponse.json({ ...error, created: false }, { status: 500 });
+    return NextResponse.json({ ...error, status: 1 }, { status: 500 });
   }
 }
 
 /*
 name
+lastName
 dni
 phoneNumber
 country

@@ -128,6 +128,7 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
         ),
       email: yup.string().email("Correo inválido").required("Correo requerido"),
       name: yup.string().required("Nombre requerido"),
+      lastName: yup.string().required("Apellido requerido"),
       roleId: yup.string().required("Rol requerido"),
       phoneNumber: yup.string().notRequired().length(11, "Teléfono inválido"),
     })
@@ -215,6 +216,14 @@ const CrudModal = ({ OpenButtonComponent, title, data, mutate }) => {
             placeholder="Nombre"
             register={register}
             error={errors?.name}
+          />
+          <Textinput
+            label="Apellido"
+            type="text"
+            placeholder="Apellido"
+            name={"lastName"}
+            register={register}
+            error={errors?.lastName}
           />
 
           <Textinput
@@ -424,6 +433,7 @@ const CreateModal = ({ OpenButtonComponent, title, mutate }) => {
         ),
       email: yup.string().email("Correo inválido").required("Correo requerido"),
       name: yup.string().required("Nombre requerido"),
+      lastName: yup.string().required("Apellido requerido"),
       roleId: yup.string().required("Rol requerido"),
       phoneNumber: yup.string().notRequired().length(11, "Teléfono inválido"),
       password: yup
@@ -514,7 +524,14 @@ const CreateModal = ({ OpenButtonComponent, title, mutate }) => {
             register={register}
             error={errors?.name}
           />
-
+          <Textinput
+            label="Apellido"
+            type="text"
+            placeholder="Apellido"
+            name={"lastName"}
+            register={register}
+            error={errors?.lastName}
+          />
           <Textinput
             label="DNI"
             type="text"
@@ -707,7 +724,7 @@ const UserTable = ({ mutate, ...rest }) => {
       },
       {
         Header: "Nombre",
-        accessor: "name",
+        accessor: "fullName",
 
         Cell: ({ row }) => {
           const memoImage = useMemo(
@@ -715,7 +732,7 @@ const UserTable = ({ mutate, ...rest }) => {
             [row.original.image]
           );
 
-          return <Avatar name={row.original.name} image={memoImage} />;
+          return <Avatar name={row.original.fullName} image={memoImage} />;
         },
       },
       ,

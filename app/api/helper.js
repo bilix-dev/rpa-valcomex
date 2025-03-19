@@ -263,7 +263,7 @@ export async function sendDataAsync(container) {
           sealLine: container.containerMatch.sealLine,
           numCartaPorte: container.numCartaPorte,
           consignee: container.consignee,
-          choferName: container.containerMatch.user.name,
+          choferName: container.containerMatch.user.normalizedName,
           foreign: container.containerMatch.user.foreign,
         };
         break;
