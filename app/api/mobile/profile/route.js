@@ -3,6 +3,13 @@ import { NextResponse } from "next/server";
 import { User } from "@/database/models";
 import { Op } from "sequelize";
 
+export async function GET(request, { params }) {
+  const headersList = headers();
+  const id = headersList.get("userId");
+  const user = await User.findByPk(id);
+  return user;
+}
+
 export async function PUT(request, { params }) {
   const headersList = headers();
   const userName = headersList.get("userName");
