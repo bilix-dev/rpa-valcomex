@@ -46,7 +46,7 @@ export async function POST(request) {
 
     const role = await Role.findOne({ where: { name: "Chofer" } });
 
-    if (role)
+    if (!role)
       return NextResponse.json(
         {
           status: 1,
