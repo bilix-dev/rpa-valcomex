@@ -1,4 +1,4 @@
-import { User } from "@/database/models";
+import { Role, User } from "@/database/models";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { addDays } from "@/helpers/helper";
@@ -44,10 +44,22 @@ export async function POST(request) {
     const expiration = new Date();
     addDays(expiration, process.env.PASSWORD_EXPIRATION_DAYS_LIMIT);
 
+    const role = await Role.findOne({ where: { name: "Chofer" } });
+
+    if (role)
+      return NextResponse.json(
+        {
+          status: 1,
+          message: "El rol chofer no existe",
+        },
+        { status: 400 }
+      );
+
     await User.create({
       ...rest,
       userName,
       email,
+      roleId: role.id,
       emailVerified: new Date(),
       hashedPassword,
       expiration,

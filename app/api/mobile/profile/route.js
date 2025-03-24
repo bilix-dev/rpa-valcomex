@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 export async function PUT(request, { params }) {
   const headersList = headers();
   const userName = headersList.get("userName");
-  const id = params.userId;
+  const id = headersList.get("userId");
   const { name, lastName, email, dni, phoneNumber, country } =
     await request.json();
 

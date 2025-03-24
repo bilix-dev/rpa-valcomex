@@ -6,7 +6,7 @@ const CellMatch = ({ match }) => {
     match && (
       <ol className="list-disc">
         <li>
-          <div className="text-xs">{match.user.name}</div>
+          <div className="text-xs">{match.user.fullName}</div>
         </li>
         <li>
           <div className="text-xs">{match.user.dni}</div>
