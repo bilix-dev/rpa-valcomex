@@ -39,6 +39,9 @@ export async function PUT(request, { params }) {
     await existUser.update({ hashedPassword, updatedBy: userName });
     return NextResponse.json({ status: 0 });
   } catch (e) {
-    return NextResponse.json({ status: 1 }, { status: 500 });
+    return NextResponse.json(
+      { status: 1, message: e.message },
+      { status: 500 }
+    );
   }
 }
