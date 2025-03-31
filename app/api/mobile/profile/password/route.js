@@ -9,17 +9,26 @@ export async function PUT(request, { params }) {
   const id = headersList.get("userId");
   const { password, confirmPassword, oldPassword } = await request.json();
   try {
-    let hashedPassword = await bcrypt.hash(oldPassword, 10);
-
     const existUser = await User.findOne({
-      where: { id, hashedPassword },
+      where: { id },
     });
 
     if (!existUser)
       return NextResponse.json(
         {
           status: 1,
-          message: "La antigua contraseña no coincide",
+          message: "El usuario no existe",
+        },
+        { status: 400 }
+      );
+
+    const compare = await bcrypt.compare(oldPassword, existUser.hashedPassword);
+
+    if (!compare)
+      return NextResponse.json(
+        {
+          status: 1,
+          message: "La antigua password no coincide",
         },
         { status: 400 }
       );
@@ -28,13 +37,13 @@ export async function PUT(request, { params }) {
       return NextResponse.json(
         {
           status: 1,
-          message: "Las contraseñas no coinciden",
+          message: "Las password no coinciden",
         },
         { status: 400 }
       );
     }
 
-    hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     await existUser.update({ hashedPassword, updatedBy: userName });
     return NextResponse.json({ status: 0 });
