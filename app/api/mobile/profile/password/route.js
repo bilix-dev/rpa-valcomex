@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { User } from "@/database/models";
-import { Op } from "sequelize";
+import bcrypt from "bcrypt";
 
 export async function PUT(request, { params }) {
   const headersList = headers();
