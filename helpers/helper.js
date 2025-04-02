@@ -43,7 +43,7 @@ export const ENDPOINTS = Object.freeze({
   sti: "STI",
   silogport: "Silogport",
   tps: "TPS",
-  silogport_tps: "Silogport → TPS",
+  silogport_tps: "Silogport -> TPS",
 });
 
 export const SIZE = Object.freeze({
